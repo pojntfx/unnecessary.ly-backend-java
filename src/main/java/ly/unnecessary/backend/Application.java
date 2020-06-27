@@ -6,6 +6,7 @@ import io.ebean.DatabaseFactory;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.grpc.ServerBuilder;
+import ly.unnecessary.backend.converters.RoomsConverterImpl;
 import ly.unnecessary.backend.cores.RoomsCoreImpl;
 import ly.unnecessary.backend.persisters.RoomsPersisterImpl;
 import ly.unnecessary.backend.services.RoomsServiceImpl;
@@ -46,7 +47,8 @@ public class Application {
 
         // Create services
         var roomsPersister = new RoomsPersisterImpl(database);
-        var roomsCore = new RoomsCoreImpl(roomsPersister);
+        var roomsConverter = new RoomsConverterImpl();
+        var roomsCore = new RoomsCoreImpl(roomsPersister, roomsConverter);
         var roomsService = new RoomsServiceImpl(roomsCore);
 
         // Serve services

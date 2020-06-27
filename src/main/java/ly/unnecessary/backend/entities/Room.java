@@ -1,5 +1,12 @@
 package ly.unnecessary.backend.entities;
 
-public interface Room {
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
+public class Room {
+    @Id
+    public long id;
+
+    public String title;
 }

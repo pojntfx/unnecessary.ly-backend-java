@@ -1,12 +1,10 @@
 package ly.unnecessary.backend.services;
 
 import ly.unnecessary.backend.cores.RoomsCore;
-
-import com.google.protobuf.Empty;
-
 import io.grpc.stub.StreamObserver;
 import ly.unnecessary.backend.api.RoomsGrpc;
-import ly.unnecessary.backend.api.RoomsOuterClass.RoomsResponse;
+import ly.unnecessary.backend.api.RoomsOuterClass.NewRoom;
+import ly.unnecessary.backend.api.RoomsOuterClass.Room;
 
 public class RoomsServiceImpl extends RoomsGrpc.RoomsImplBase implements RoomsService {
     RoomsCore core;
@@ -16,7 +14,11 @@ public class RoomsServiceImpl extends RoomsGrpc.RoomsImplBase implements RoomsSe
     }
 
     @Override
-    public void listRooms(Empty request, StreamObserver<RoomsResponse> responseObserver) {
-        super.listRooms(request, responseObserver);
+    public void createRoom(NewRoom request, StreamObserver<Room> responseObserver) {
+        var newRoom = this.core.createRoom(Room.newBuilder().setTitle(request.getTitle()).build());
+
+        responseObserver.onNext(newRoom);
+
+        responseObserver.onCompleted();
     }
 }

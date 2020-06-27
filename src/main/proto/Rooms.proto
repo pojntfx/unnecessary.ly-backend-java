@@ -6,11 +6,11 @@ import "google/protobuf/empty.proto";
 
 option java_package = "ly.unnecessary.backend.api";
 
-service Rooms { rpc listRooms(google.protobuf.Empty) returns (RoomsResponse); }
+service Rooms { rpc createRoom(NewRoom) returns (Room); }
 
-message RoomsResponse { repeated Room rooms = 1; }
+message NewRoom { string title = 1; }
 
 message Room {
-  string id = 1;
+  double id = 1;
   string title = 2;
 }
