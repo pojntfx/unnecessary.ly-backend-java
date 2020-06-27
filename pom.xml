@@ -153,6 +153,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <tiles>
+                        <tile>org.avaje.tile:java-compile:11</tile>
                         <tile>io.ebean.tile:enhancement:12.3.4</tile>
                     </tiles>
                 </configuration>

@@ -1,7 +1,7 @@
 package ly.unnecessary.backend.cores;
 
+import ly.unnecessary.backend.api.RoomsOuterClass.Room;
 import ly.unnecessary.backend.converters.RoomsConverter;
-import ly.unnecessary.backend.entities.Room;
 import ly.unnecessary.backend.persisters.RoomsPersister;
 
 public class RoomsCoreImpl implements RoomsCore {
@@ -14,8 +14,7 @@ public class RoomsCoreImpl implements RoomsCore {
     }
 
     @Override
-    public ly.unnecessary.backend.api.RoomsOuterClass.Room createRoom(
-            ly.unnecessary.backend.api.RoomsOuterClass.Room room) {
+    public Room createRoom(Room room) {
         var internalRoom = this.converter.toInternal(room);
 
         var createdRoom = this.persister.createRoom(internalRoom);

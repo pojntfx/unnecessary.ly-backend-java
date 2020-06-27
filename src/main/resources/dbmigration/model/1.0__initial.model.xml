@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="room" pkName="pk_room">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="title" type="varchar"/>
+        </createTable>
+    </changeSet>
+</migration>
