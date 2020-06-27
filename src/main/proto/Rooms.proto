@@ -11,6 +11,6 @@ service Rooms { rpc createRoom(NewRoom) returns (Room); }
 message NewRoom { string title = 1; }
 
 message Room {
-  double id = 1;
+  int32 id = 1;
   string title = 2;
 }

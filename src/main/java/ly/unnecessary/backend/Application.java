@@ -5,6 +5,8 @@ import java.io.IOException;
 import io.ebean.DatabaseFactory;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
+import io.ebean.migration.MigrationConfig;
+import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
 import ly.unnecessary.backend.converters.RoomsConverterImpl;
 import ly.unnecessary.backend.cores.RoomsCoreImpl;
@@ -29,9 +31,19 @@ public class Application {
         final var dbport = (dbportFlag == null) ? 5432 : Integer.valueOf(dbportFlag);
         final var dbname = (dbnameFlag == null) ? "pojntfx" : dbnameFlag;
 
-        System.out.printf("Starting server on port %d\n", lport);
+        // Migrate the database
+        System.out.printf("Migrating database %d\n", lport);
+        var migrationConfig = new MigrationConfig();
+        migrationConfig.setDbUsername(dbusr);
+        migrationConfig.setDbPassword(dbpass);
+        migrationConfig.setDbUrl(String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname));
+        migrationConfig.setDbDriver("org.postgresql.Driver");
 
-        // Create database
+        var migrationRunner = new MigrationRunner(migrationConfig);
+        migrationRunner.run();
+
+        // Connect to database
+        System.out.printf("Connecting to database %d\n", lport);
         var dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setUsername(dbusr);
         dataSourceConfig.setPassword(dbpass);
@@ -41,8 +53,6 @@ public class Application {
         var databaseBaseConfig = new DatabaseConfig();
         databaseBaseConfig.setDataSourceConfig(dataSourceConfig); // Deprecated but still in use; see
                                                                   // https://ebean.io/docs/intro/configuration/#programmatic
-        databaseBaseConfig.setDbSchema(dbname);
-
         var database = DatabaseFactory.create(databaseBaseConfig);
 
         // Create services
@@ -52,6 +62,7 @@ public class Application {
         var roomsService = new RoomsServiceImpl(roomsCore);
 
         // Serve services
+        System.out.printf("Starting server on port %d\n", lport);
         ServerBuilder.forPort(lport).addService(roomsService).build().start().awaitTermination();
     }
 }

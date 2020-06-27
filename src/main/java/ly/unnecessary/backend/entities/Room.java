@@ -6,7 +6,23 @@ import javax.persistence.Id;
 @Entity
 public class Room {
     @Id
-    public long id;
+    int id;
 
-    public String title;
+    String title;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

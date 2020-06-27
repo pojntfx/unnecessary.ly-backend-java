@@ -1,5 +1,7 @@
 package ly.unnecessary.backend.cores;
 
+import ly.unnecessary.backend.api.RoomsOuterClass.Room;
+
 public interface RoomsCore {
-    ly.unnecessary.backend.api.RoomsOuterClass.Room createRoom(ly.unnecessary.backend.api.RoomsOuterClass.Room room);
+    Room createRoom(Room room);
 }
