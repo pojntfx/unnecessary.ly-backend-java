@@ -2,6 +2,8 @@ package ly.unnecessary.backend;
 
 import java.io.IOException;
 
+import org.slf4j.LoggerFactory;
+
 import io.ebean.DatabaseFactory;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
@@ -14,7 +16,12 @@ import ly.unnecessary.backend.persisters.RoomsPersisterImpl;
 import ly.unnecessary.backend.services.RoomsServiceImpl;
 
 public class Application {
+    static String driver = "org.postgresql.Driver";
+
     public static void main(String[] args) throws InterruptedException, IOException {
+        // Get logger
+        var logger = LoggerFactory.getLogger(Application.class);
+
         // Parse flags
         var lportFlag = System.getenv("LPORT");
         var dbusrFlag = System.getenv("DBUSR");
@@ -30,25 +37,26 @@ public class Application {
         final var dbhost = (dbhostFlag == null) ? "localhost" : dbhostFlag;
         final var dbport = (dbportFlag == null) ? 5432 : Integer.valueOf(dbportFlag);
         final var dbname = (dbnameFlag == null) ? "pojntfx" : dbnameFlag;
+        final var dbConnectionLine = String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname);
 
         // Migrate the database
-        System.out.printf("Migrating database %d\n", lport);
+        logger.info("Migrating database {}", dbConnectionLine);
         var migrationConfig = new MigrationConfig();
         migrationConfig.setDbUsername(dbusr);
         migrationConfig.setDbPassword(dbpass);
-        migrationConfig.setDbUrl(String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname));
-        migrationConfig.setDbDriver("org.postgresql.Driver");
+        migrationConfig.setDbUrl(dbConnectionLine);
+        migrationConfig.setDbDriver(driver);
 
         var migrationRunner = new MigrationRunner(migrationConfig);
         migrationRunner.run();
 
         // Connect to database
-        System.out.printf("Connecting to database %d\n", lport);
+        logger.info("Connecting to database {}", dbConnectionLine);
         var dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setUsername(dbusr);
         dataSourceConfig.setPassword(dbpass);
-        dataSourceConfig.setUrl(String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname));
-        dataSourceConfig.setDriver("org.postgresql.Driver");
+        dataSourceConfig.setUrl(dbConnectionLine);
+        dataSourceConfig.setDriver(driver);
 
         var databaseBaseConfig = new DatabaseConfig();
         databaseBaseConfig.setDataSourceConfig(dataSourceConfig); // Deprecated but still in use; see
@@ -62,7 +70,7 @@ public class Application {
         var roomsService = new RoomsServiceImpl(roomsCore);
 
         // Serve services
-        System.out.printf("Starting server on port %d\n", lport);
+        logger.info("Starting server on port {}", lport);
         ServerBuilder.forPort(lport).addService(roomsService).build().start().awaitTermination();
     }
 }
