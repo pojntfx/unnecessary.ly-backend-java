@@ -1,4 +1,4 @@
-package ly.unnecessary.backend.rooms;
+package ly.unnecessary.backend.entities;
 
 public class RoomImpl implements Room {
 

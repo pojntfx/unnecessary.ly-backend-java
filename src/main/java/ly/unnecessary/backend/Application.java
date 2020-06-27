@@ -2,9 +2,13 @@ package ly.unnecessary.backend;
 
 import java.io.IOException;
 
+import io.ebean.DatabaseFactory;
+import io.ebean.config.DatabaseConfig;
+import io.ebean.datasource.DataSourceConfig;
 import io.grpc.ServerBuilder;
-import ly.unnecessary.backend.rooms.RoomsCoreImpl;
-import ly.unnecessary.backend.rooms.RoomsServiceImpl;
+import ly.unnecessary.backend.cores.RoomsCoreImpl;
+import ly.unnecessary.backend.persisters.RoomsPersisterImpl;
+import ly.unnecessary.backend.services.RoomsServiceImpl;
 
 public class Application {
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -26,8 +30,23 @@ public class Application {
 
         System.out.printf("Starting server on port %d\n", lport);
 
+        // Create database
+        var dataSourceConfig = new DataSourceConfig();
+        dataSourceConfig.setUsername(dbusr);
+        dataSourceConfig.setPassword(dbpass);
+        dataSourceConfig.setUrl(String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname));
+        dataSourceConfig.setDriver("org.postgresql.Driver");
+
+        var databaseBaseConfig = new DatabaseConfig();
+        databaseBaseConfig.setDataSourceConfig(dataSourceConfig); // Deprecated but still in use; see
+                                                                  // https://ebean.io/docs/intro/configuration/#programmatic
+        databaseBaseConfig.setDbSchema(dbname);
+
+        var database = DatabaseFactory.create(databaseBaseConfig);
+
         // Create services
-        var roomsCore = new RoomsCoreImpl();
+        var roomsPersister = new RoomsPersisterImpl(database);
+        var roomsCore = new RoomsCoreImpl(roomsPersister);
         var roomsService = new RoomsServiceImpl(roomsCore);
 
         // Serve services
