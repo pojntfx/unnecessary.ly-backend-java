@@ -1,5 +1,7 @@
 package ly.unnecessary.backend.persisters;
 
-public interface RoomsPersister {
+import ly.unnecessary.backend.entities.Room;
 
+public interface RoomsPersister {
+    Room createRoom(ly.unnecessary.backend.entities.Room room);
 }
