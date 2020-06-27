@@ -1,9 +1,12 @@
-package ly.unnecessary.backend.rooms;
+package ly.unnecessary.backend.services;
+
+import ly.unnecessary.backend.cores.RoomsCore;
 
 import com.google.protobuf.Empty;
 
 import io.grpc.stub.StreamObserver;
-import ly.unnecessary.backend.rooms.RoomsOuterClass.RoomsResponse;
+import ly.unnecessary.backend.api.RoomsGrpc;
+import ly.unnecessary.backend.api.RoomsOuterClass.RoomsResponse;
 
 public class RoomsServiceImpl extends RoomsGrpc.RoomsImplBase implements RoomsService {
     RoomsCore core;

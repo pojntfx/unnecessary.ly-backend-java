@@ -1,4 +1,4 @@
-package ly.unnecessary.backend.rooms;
+package ly.unnecessary.backend.services;
 
 import io.grpc.BindableService;
 
