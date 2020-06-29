@@ -10,10 +10,10 @@ import io.ebean.datasource.DataSourceConfig;
 import io.ebean.migration.MigrationConfig;
 import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
-import ly.unnecessary.backend.converters.RoomsConverterImpl;
-import ly.unnecessary.backend.cores.RoomsCoreImpl;
-import ly.unnecessary.backend.persisters.RoomsPersisterImpl;
-import ly.unnecessary.backend.services.RoomsServiceImpl;
+import ly.unnecessary.backend.converters.UserConverter;
+import ly.unnecessary.backend.core.UserCore;
+import ly.unnecessary.backend.persisters.UserPersister;
+import ly.unnecessary.backend.services.UserService;
 
 public class Application {
     static String driver = "org.postgresql.Driver";
@@ -63,14 +63,20 @@ public class Application {
                                                                   // https://ebean.io/docs/intro/configuration/#programmatic
         var database = DatabaseFactory.create(databaseBaseConfig);
 
+        // Create persisters
+        var userPersister = new UserPersister(database);
+
+        // Create core
+        var userCore = new UserCore(userPersister);
+
+        // Create converters
+        var userConverter = new UserConverter();
+
         // Create services
-        var roomsPersister = new RoomsPersisterImpl(database);
-        var roomsConverter = new RoomsConverterImpl();
-        var roomsCore = new RoomsCoreImpl(roomsPersister, roomsConverter);
-        var roomsService = new RoomsServiceImpl(roomsCore);
+        var userService = new UserService(userCore, userConverter);
 
         // Serve services
         logger.info("Starting server on port {}", lport);
-        ServerBuilder.forPort(lport).addService(roomsService).build().start().awaitTermination();
+        ServerBuilder.forPort(lport).addService(userService).build().start().awaitTermination();
     }
 }

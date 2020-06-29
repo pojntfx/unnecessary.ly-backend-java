@@ -2,4 +2,4 @@ ebean:
   test:
     platform: h2
     ddlMode: dropCreate
-    dbName: unnecessary_ly_server_test
+    dbName: test
