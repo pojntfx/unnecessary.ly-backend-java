@@ -1,5 +1,6 @@
 package ly.unnecessary.backend.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ public class User {
 
     private String password;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserSignUpRequest userSignupRequest;
 
     public long getId() {
