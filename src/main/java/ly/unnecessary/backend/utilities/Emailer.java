@@ -6,16 +6,16 @@ import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
 
-public class UserEmailer {
+public class Emailer {
     private Mailer mailer;
     private Email templateEmail;
 
-    public UserEmailer(Mailer mailer, Email templateEmail) {
+    public Emailer(Mailer mailer, Email templateEmail) {
         this.mailer = mailer;
         this.templateEmail = templateEmail;
     }
 
-    public String requestSignUpConfirmation(String email) {
+    public String requestConfirmation(String email) {
         var token = UUID.randomUUID();
 
         var emailToSend = EmailBuilder.copying(this.templateEmail).to("", email)

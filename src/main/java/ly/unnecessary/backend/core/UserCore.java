@@ -1,6 +1,7 @@
 package ly.unnecessary.backend.core;
 
 import ly.unnecessary.backend.entities.User;
+import ly.unnecessary.backend.entities.UserPasswordResetRequest;
 import ly.unnecessary.backend.entities.UserSignUpRequest;
 import ly.unnecessary.backend.persisters.UserPersister;
 import ly.unnecessary.backend.utilities.Hasher;
@@ -8,11 +9,14 @@ import ly.unnecessary.backend.utilities.Hasher;
 public class UserCore {
     private UserPersister persister;
     private UserSignUpRequestCore userSignUpRequestCore;
+    private UserPasswordResetRequestCore userPasswordResetRequestCore;
     private Hasher hasher;
 
-    public UserCore(UserPersister persister, UserSignUpRequestCore userSignUpRequestCore, Hasher hasher) {
+    public UserCore(UserPersister persister, UserSignUpRequestCore userSignUpRequestCore,
+            UserPasswordResetRequestCore userPasswordResetRequestCore, Hasher hasher) {
         this.persister = persister;
         this.userSignUpRequestCore = userSignUpRequestCore;
+        this.userPasswordResetRequestCore = userPasswordResetRequestCore;
         this.hasher = hasher;
     }
 
@@ -20,10 +24,10 @@ public class UserCore {
         var userSignUpRequest = new UserSignUpRequest();
         this.userSignUpRequestCore.createRequest(userSignUpRequest, user.getEmail());
 
-        user.setUserSignUpRequest(userSignUpRequest);
+        user.setUserSignupRequest(userSignUpRequest);
         user.setPassword(this.hasher.hash(user.getPassword()));
 
-        this.persister.createUser(user);
+        this.persister.saveUser(user);
 
         return user;
     }
@@ -32,10 +36,10 @@ public class UserCore {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
         var userSignUpRequestFromPersistence = this.userSignUpRequestCore
-                .validateSignUpRequest(userFromPersistence.getUserSignUpRequest(), userSignUpRequest.getToken());
+                .validateSignUpRequest(userFromPersistence.getUserSignupRequest(), userSignUpRequest.getToken());
 
         if (!userSignUpRequestFromPersistence.isConfirmed()) {
-            throw new Error("Invalid confirmation token");
+            throw new Error("Invalid sign up confirmation token");
         }
 
         return userFromPersistence;
@@ -44,7 +48,7 @@ public class UserCore {
     public User signIn(User user) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
-        if (!userFromPersistence.getUserSignUpRequest().isConfirmed()) {
+        if (!userFromPersistence.getUserSignupRequest().isConfirmed()) {
             throw new Error("User has not yet confirmed sign up");
         }
 
@@ -53,6 +57,40 @@ public class UserCore {
         if (!valid) {
             throw new Error("Invalid username or password");
         }
+
+        return userFromPersistence;
+    }
+
+    public User requestPasswordReset(User user) {
+        var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
+
+        if (userFromPersistence == null) {
+            throw new Error("No user with this email found");
+        }
+
+        var userPasswordResetRequest = new UserPasswordResetRequest();
+        this.userPasswordResetRequestCore.createRequest(userPasswordResetRequest, userFromPersistence.getEmail());
+
+        userFromPersistence.setUserPasswordResetRequest(userPasswordResetRequest);
+
+        this.persister.saveUser(userFromPersistence);
+
+        return userFromPersistence;
+    }
+
+    public User confirmPasswordReset(User user, UserPasswordResetRequest userPasswordResetRequest) {
+        var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
+
+        var userSignUpRequestFromPersistence = this.userPasswordResetRequestCore.validatePasswordResetRequest(
+                userFromPersistence.getUserPasswordResetRequest(), userPasswordResetRequest.getToken());
+
+        if (!userSignUpRequestFromPersistence.isConfirmed()) {
+            throw new Error("Invalid password reset confirmation token");
+        }
+
+        userFromPersistence.setPassword(this.hasher.hash(user.getPassword()));
+
+        this.persister.saveUser(userFromPersistence);
 
         return userFromPersistence;
     }
