@@ -28,4 +28,13 @@ public class UserConverter {
 
         return user;
     }
+
+    public User fromUserSignUpConfirmationToInternal(
+            ly.unnecessary.backend.api.UserOuterClass.UserSignUpConfirmation signUpConfirmation) {
+        var user = new User();
+
+        user.setEmail(signUpConfirmation.getEmail());
+
+        return user;
+    }
 }

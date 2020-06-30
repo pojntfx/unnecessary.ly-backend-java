@@ -11,9 +11,13 @@ import io.ebean.migration.MigrationConfig;
 import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
 import ly.unnecessary.backend.converters.UserConverter;
+import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
 import ly.unnecessary.backend.core.UserCore;
+import ly.unnecessary.backend.core.UserSignUpRequestCore;
 import ly.unnecessary.backend.persisters.UserPersister;
+import ly.unnecessary.backend.persisters.UserSignUpRequestPersister;
 import ly.unnecessary.backend.services.UserService;
+import ly.unnecessary.backend.utilities.UserEmailer;
 
 public class Application {
     static String driver = "org.postgresql.Driver";
@@ -64,16 +68,22 @@ public class Application {
         var database = DatabaseFactory.create(databaseBaseConfig);
 
         // Create persisters
+        var userSignUpRequestPersister = new UserSignUpRequestPersister(database);
         var userPersister = new UserPersister(database);
 
+        // Create utilities
+        var userEmailer = new UserEmailer();
+
         // Create core
-        var userCore = new UserCore(userPersister);
+        var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, userEmailer);
+        var userCore = new UserCore(userPersister, userSignUpRequestCore);
 
         // Create converters
+        var userSignUpRequestConverter = new UserSignUpRequestConverter();
         var userConverter = new UserConverter();
 
         // Create services
-        var userService = new UserService(userCore, userConverter);
+        var userService = new UserService(userCore, userConverter, userSignUpRequestConverter);
 
         // Serve services
         logger.info("Starting server on port {}", lport);
