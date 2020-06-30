@@ -2,6 +2,9 @@ package ly.unnecessary.backend;
 
 import java.io.IOException;
 
+import org.simplejavamail.api.mailer.config.TransportStrategy;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.mailer.MailerBuilder;
 import org.slf4j.LoggerFactory;
 
 import io.ebean.DatabaseFactory;
@@ -27,20 +30,30 @@ public class Application {
         var logger = LoggerFactory.getLogger(Application.class);
 
         // Parse flags
-        var lportFlag = System.getenv("LPORT");
-        var dbusrFlag = System.getenv("DBUSR");
-        var dbpassFlag = System.getenv("DBPASS");
-        var dbhostFlag = System.getenv("DBHOST");
-        var dbportFlag = System.getenv("DBPORT");
-        var dbnameFlag = System.getenv("DBNAME");
+        var lportFlag = System.getenv("ULY_LPORT");
+        var dbusrFlag = System.getenv("ULY_DBUSR");
+        var dbpassFlag = System.getenv("ULY_DBPASS");
+        var dbhostFlag = System.getenv("ULY_DBHOST");
+        var dbportFlag = System.getenv("ULY_DBPORT");
+        var dbnameFlag = System.getenv("ULY_DBNAME");
+        var smtpHostFlag = System.getenv("ULY_SMTPHOST");
+        var smtpPortFlag = System.getenv("ULY_SMTPPORT");
+        var smtpUsrFlag = System.getenv("ULY_SMTPUSR");
+        var smtpPassFlag = System.getenv("ULY_SMTPPASS");
+        var smtpEmailFlag = System.getenv("ULY_SMTPEMAIL");
 
         // Use default values if flags are not set
         final var lport = (lportFlag == null) ? 1999 : Integer.valueOf(lportFlag);
-        final var dbusr = (dbusrFlag == null) ? "pojntfx" : dbusrFlag;
-        final var dbpass = (dbpassFlag == null) ? "pojntfx" : dbpassFlag;
+        final var dbusr = (dbusrFlag == null) ? "example" : dbusrFlag;
+        final var dbpass = (dbpassFlag == null) ? "example" : dbpassFlag;
         final var dbhost = (dbhostFlag == null) ? "localhost" : dbhostFlag;
         final var dbport = (dbportFlag == null) ? 5432 : Integer.valueOf(dbportFlag);
-        final var dbname = (dbnameFlag == null) ? "pojntfx" : dbnameFlag;
+        final var dbname = (dbnameFlag == null) ? "example" : dbnameFlag;
+        final var smtpHost = (smtpHostFlag == null) ? "mail.example.com" : smtpHostFlag;
+        final var smtpPort = (smtpPortFlag == null) ? 587 : Integer.valueOf(smtpPortFlag);
+        final var smtpUsr = (smtpUsrFlag == null) ? "system@example.com" : smtpUsrFlag;
+        final var smtpPass = (smtpPassFlag == null) ? "example" : smtpPassFlag;
+        final var smtpEmail = (smtpEmailFlag == null) ? "system@example.com" : smtpEmailFlag;
         final var dbConnectionLine = String.format("jdbc:postgresql://%s:%d/%s", dbhost, dbport, dbname);
 
         // Migrate the database
@@ -72,7 +85,12 @@ public class Application {
         var userPersister = new UserPersister(database);
 
         // Create utilities
-        var userEmailer = new UserEmailer();
+        var mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsr, smtpPass)
+                .withTransportStrategy(TransportStrategy.SMTP_TLS).buildMailer();
+        var templateEmail = EmailBuilder.startingBlank().from("unneccessary.ly", smtpEmail)
+                .withSubject("unneccessary.ly Signup Confirmation").withPlainText("Your confirmation token is: ")
+                .buildEmail();
+        var userEmailer = new UserEmailer(mailer, templateEmail);
 
         // Create core
         var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, userEmailer);
