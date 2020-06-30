@@ -5,7 +5,8 @@ package ly.unnecessary.backend;
 option java_package = "ly.unnecessary.backend.api";
 
 service UserService {
-  rpc signUp(UserSignUpRequest) returns (User);
+  rpc requestSignUp(UserSignUpRequest) returns (User);
+  rpc confirmSignUp(UserSignUpConfirmation) returns (User);
   rpc signIn(UserSignInRequest) returns (User);
 }
 
@@ -13,6 +14,11 @@ message UserSignUpRequest {
   string displayName = 1;
   string email = 2;
   string password = 3;
+}
+
+message UserSignUpConfirmation {
+  string email = 1;
+  string token = 2;
 }
 
 message UserSignInRequest {

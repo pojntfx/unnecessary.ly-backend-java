@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +20,9 @@ public class User {
     private String email;
 
     private String password;
+
+    @OneToOne
+    private UserSignUpRequest userSignupRequest;
 
     public long getId() {
         return id;
@@ -50,5 +54,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserSignUpRequest getUserSignUpRequest() {
+        return userSignupRequest;
+    }
+
+    public void setUserSignUpRequest(UserSignUpRequest userSignupRequest) {
+        this.userSignupRequest = userSignupRequest;
     }
 }

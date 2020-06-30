@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="users">
+            <column name="user_signup_request_id" type="bigint" uniqueOneToOne="uq_users_user_signup_request_id" references="user_sign_up_request.id" foreignKeyName="fk_users_user_signup_request_id"/>
+        </addColumn>
+        <createTable name="user_sign_up_request" pkName="pk_user_sign_up_request">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="token" type="varchar"/>
+            <column name="confirmed" type="boolean" defaultValue="false" notnull="true"/>
+        </createTable>
+    </changeSet>
+</migration>
