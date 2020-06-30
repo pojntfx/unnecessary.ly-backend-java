@@ -1,5 +1,6 @@
 package ly.unnecessary.backend.converters;
 
+import ly.unnecessary.backend.api.UserOuterClass.UserPasswordResetRequest;
 import ly.unnecessary.backend.api.UserOuterClass.UserSignInRequest;
 import ly.unnecessary.backend.api.UserOuterClass.UserSignUpRequest;
 import ly.unnecessary.backend.entities.User;
@@ -34,6 +35,24 @@ public class UserConverter {
         var user = new User();
 
         user.setEmail(signUpConfirmation.getEmail());
+
+        return user;
+    }
+
+    public User fromUserPasswordResetConfirmationToInternal(
+            ly.unnecessary.backend.api.UserOuterClass.UserPasswordResetConfirmation passwordResetConfirmation) {
+        var user = new User();
+
+        user.setEmail(passwordResetConfirmation.getEmail());
+        user.setPassword(passwordResetConfirmation.getNewPassword());
+
+        return user;
+    }
+
+    public User fromPasswordResetRequestToInternal(UserPasswordResetRequest passwordResetRequest) {
+        var user = new User();
+
+        user.setEmail(passwordResetRequest.getEmail());
 
         return user;
     }

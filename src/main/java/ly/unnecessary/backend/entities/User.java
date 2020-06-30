@@ -25,6 +25,9 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private UserSignUpRequest userSignupRequest;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserPasswordResetRequest userPasswordResetRequest;
+
     public long getId() {
         return id;
     }
@@ -57,11 +60,19 @@ public class User {
         this.password = password;
     }
 
-    public UserSignUpRequest getUserSignUpRequest() {
+    public UserSignUpRequest getUserSignupRequest() {
         return userSignupRequest;
     }
 
-    public void setUserSignUpRequest(UserSignUpRequest userSignupRequest) {
+    public void setUserSignupRequest(UserSignUpRequest userSignupRequest) {
         this.userSignupRequest = userSignupRequest;
+    }
+
+    public UserPasswordResetRequest getUserPasswordResetRequest() {
+        return userPasswordResetRequest;
+    }
+
+    public void setUserPasswordResetRequest(UserPasswordResetRequest userPasswordResetRequest) {
+        this.userPasswordResetRequest = userPasswordResetRequest;
     }
 }

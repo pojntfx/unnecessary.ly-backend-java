@@ -10,7 +10,7 @@ public class UserPersister {
         this.database = database;
     }
 
-    public User createUser(User user) {
+    public User saveUser(User user) {
         this.database.save(user);
 
         return user;
