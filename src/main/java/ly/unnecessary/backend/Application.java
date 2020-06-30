@@ -20,6 +20,7 @@ import ly.unnecessary.backend.core.UserSignUpRequestCore;
 import ly.unnecessary.backend.persisters.UserPersister;
 import ly.unnecessary.backend.persisters.UserSignUpRequestPersister;
 import ly.unnecessary.backend.services.UserService;
+import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.UserEmailer;
 
 public class Application {
@@ -91,10 +92,11 @@ public class Application {
                 .withSubject("unneccessary.ly Signup Confirmation").withPlainText("Your confirmation token is: ")
                 .buildEmail();
         var userEmailer = new UserEmailer(mailer, templateEmail);
+        var hasher = new Hasher();
 
         // Create core
-        var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, userEmailer);
-        var userCore = new UserCore(userPersister, userSignUpRequestCore);
+        var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, userEmailer, hasher);
+        var userCore = new UserCore(userPersister, userSignUpRequestCore, hasher);
 
         // Create converters
         var userSignUpRequestConverter = new UserSignUpRequestConverter();

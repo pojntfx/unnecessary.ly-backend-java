@@ -1,17 +1,19 @@
 package ly.unnecessary.backend.core;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import ly.unnecessary.backend.entities.User;
 import ly.unnecessary.backend.entities.UserSignUpRequest;
 import ly.unnecessary.backend.persisters.UserPersister;
+import ly.unnecessary.backend.utilities.Hasher;
 
 public class UserCore {
     private UserPersister persister;
     private UserSignUpRequestCore userSignUpRequestCore;
+    private Hasher hasher;
 
-    public UserCore(UserPersister persister, UserSignUpRequestCore userSignUpRequestCore) {
+    public UserCore(UserPersister persister, UserSignUpRequestCore userSignUpRequestCore, Hasher hasher) {
         this.persister = persister;
         this.userSignUpRequestCore = userSignUpRequestCore;
+        this.hasher = hasher;
     }
 
     public User requestSignUp(User user) {
@@ -19,7 +21,7 @@ public class UserCore {
         this.userSignUpRequestCore.createRequest(userSignUpRequest, user.getEmail());
 
         user.setUserSignUpRequest(userSignUpRequest);
-        user.setPassword(BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()));
+        user.setPassword(this.hasher.hash(user.getPassword()));
 
         this.persister.createUser(user);
 
@@ -46,10 +48,9 @@ public class UserCore {
             throw new Error("User has not yet confirmed sign up");
         }
 
-        var valid = BCrypt.verifyer().verify(user.getPassword().toCharArray(),
-                userFromPersistence.getPassword().toCharArray());
+        var valid = this.hasher.verify(userFromPersistence.getPassword(), user.getPassword());
 
-        if (!valid.verified) {
+        if (!valid) {
             throw new Error("Invalid username or password");
         }
 
