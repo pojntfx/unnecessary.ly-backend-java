@@ -1,0 +1,66 @@
+package ly.unnecessary.backend.entities;
+
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class Community {
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private String displayName;
+
+    @ManyToOne(optional = false)
+    private User owner;
+
+    // @OneToMany(cascade = CascadeType.PERSIST)
+    // private List<User> moderators;
+
+    // @OneToMany(cascade = CascadeType.PERSIST)
+    // private List<User> members;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    // public List<User> getModerators() {
+    // return moderators;
+    // }
+
+    // public void setModerators(List<User> moderators) {
+    // this.moderators = moderators;
+    // }
+
+    // public List<User> getMembers() {
+    // return members;
+    // }
+
+    // public void setMembers(List<User> members) {
+    // this.members = members;
+    // }
+}

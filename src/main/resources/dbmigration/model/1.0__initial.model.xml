@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
     <changeSet type="apply">
-        <createTable name="room" pkName="pk_room">
-            <column name="id" type="integer" primaryKey="true"/>
-            <column name="title" type="varchar"/>
+        <createTable name="community" pkName="pk_community">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="display_name" type="varchar"/>
+            <column name="owner_id" type="bigint" notnull="true" references="users.id" foreignKeyName="fk_community_owner_id" foreignKeyIndex="ix_community_owner_id"/>
+        </createTable>
+        <createTable name="users" pkName="pk_users">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="display_name" type="varchar"/>
+            <column name="email" type="varchar" unique="uq_users_email"/>
+            <column name="password" type="varchar"/>
+            <column name="user_signup_request_id" type="bigint" uniqueOneToOne="uq_users_user_signup_request_id" references="user_sign_up_request.id" foreignKeyName="fk_users_user_signup_request_id"/>
+            <column name="user_password_reset_request_id" type="bigint" uniqueOneToOne="uq_users_user_password_reset_request_id" references="user_password_reset_request.id" foreignKeyName="fk_users_user_password_reset_request_id"/>
+        </createTable>
+        <createTable name="user_password_reset_request" pkName="pk_user_password_reset_request">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="token" type="varchar"/>
+            <column name="confirmed" type="boolean" defaultValue="false" notnull="true"/>
+        </createTable>
+        <createTable name="user_sign_up_request" pkName="pk_user_sign_up_request">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="token" type="varchar"/>
+            <column name="confirmed" type="boolean" defaultValue="false" notnull="true"/>
         </createTable>
     </changeSet>
 </migration>
