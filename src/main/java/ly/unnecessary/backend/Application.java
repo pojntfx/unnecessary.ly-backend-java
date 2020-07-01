@@ -13,15 +13,21 @@ import io.ebean.datasource.DataSourceConfig;
 import io.ebean.migration.MigrationConfig;
 import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
+import io.grpc.ServerInterceptors;
+import ly.unnecessary.backend.converters.CommunityConverter;
 import ly.unnecessary.backend.converters.UserConverter;
 import ly.unnecessary.backend.converters.UserPasswordResetRequestConverter;
 import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
+import ly.unnecessary.backend.core.CommunityCore;
 import ly.unnecessary.backend.core.UserCore;
 import ly.unnecessary.backend.core.UserPasswordResetRequestCore;
 import ly.unnecessary.backend.core.UserSignUpRequestCore;
+import ly.unnecessary.backend.interceptors.UserInterceptor;
+import ly.unnecessary.backend.persisters.CommunityPersister;
 import ly.unnecessary.backend.persisters.UserPasswordResetRequestPersister;
 import ly.unnecessary.backend.persisters.UserPersister;
 import ly.unnecessary.backend.persisters.UserSignUpRequestPersister;
+import ly.unnecessary.backend.services.CommunityService;
 import ly.unnecessary.backend.services.UserService;
 import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.Emailer;
@@ -88,6 +94,7 @@ public class Application {
                 var userSignUpRequestPersister = new UserSignUpRequestPersister(database);
                 var userPasswordResetRequestPersister = new UserPasswordResetRequestPersister(database);
                 var userPersister = new UserPersister(database);
+                var communityPersister = new CommunityPersister(database);
 
                 // Create utilities
                 var mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsr, smtpPass)
@@ -97,24 +104,30 @@ public class Application {
                                 .withPlainText("Your confirmation token is: ").buildEmail();
                 var emailer = new Emailer(mailer, templateEmail);
                 var hasher = new Hasher();
+                var userInterceptor = new UserInterceptor();
 
                 // Create core
                 var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, emailer, hasher);
                 var userPasswordResetRequestCore = new UserPasswordResetRequestCore(userPasswordResetRequestPersister,
                                 emailer, hasher);
                 var userCore = new UserCore(userPersister, userSignUpRequestCore, userPasswordResetRequestCore, hasher);
+                var communityCore = new CommunityCore(communityPersister, userCore);
 
                 // Create converters
                 var userSignUpRequestConverter = new UserSignUpRequestConverter();
                 var userPasswordResetRequestConverter = new UserPasswordResetRequestConverter();
                 var userConverter = new UserConverter();
+                var communityConverter = new CommunityConverter(userConverter);
 
                 // Create services
                 var userService = new UserService(userCore, userConverter, userSignUpRequestConverter,
                                 userPasswordResetRequestConverter);
+                var communityService = new CommunityService(communityCore, communityConverter, userConverter);
 
                 // Serve services
                 logger.info("Starting server on port {}", lport);
-                ServerBuilder.forPort(lport).addService(userService).build().start().awaitTermination();
+                ServerBuilder.forPort(lport).addService(userService)
+                                .addService(ServerInterceptors.intercept(communityService, userInterceptor)).build()
+                                .start().awaitTermination();
         }
 }
