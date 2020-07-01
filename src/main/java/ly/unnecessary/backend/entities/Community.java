@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -18,11 +20,13 @@ public class Community {
     @ManyToOne(optional = false)
     private User owner;
 
-    // @OneToMany(cascade = CascadeType.PERSIST)
-    // private List<User> moderators;
+    @ManyToMany
+    @JoinTable(name = "moderators_users")
+    private List<User> moderators;
 
-    // @OneToMany(cascade = CascadeType.PERSIST)
-    // private List<User> members;
+    @ManyToMany
+    @JoinTable(name = "members_users")
+    private List<User> members;
 
     public long getId() {
         return id;
@@ -48,19 +52,19 @@ public class Community {
         this.owner = owner;
     }
 
-    // public List<User> getModerators() {
-    // return moderators;
-    // }
+    public List<User> getModerators() {
+        return moderators;
+    }
 
-    // public void setModerators(List<User> moderators) {
-    // this.moderators = moderators;
-    // }
+    public void setModerators(List<User> moderators) {
+        this.moderators = moderators;
+    }
 
-    // public List<User> getMembers() {
-    // return members;
-    // }
+    public List<User> getMembers() {
+        return members;
+    }
 
-    // public void setMembers(List<User> members) {
-    // this.members = members;
-    // }
+    public void setMembers(List<User> members) {
+        this.members = members;
+    }
 }

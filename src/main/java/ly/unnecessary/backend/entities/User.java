@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,6 +34,12 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private List<Community> ownedCommunities;
+
+    @ManyToMany(mappedBy = "moderators")
+    private List<Community> moderatingCommunities;
+
+    @ManyToMany(mappedBy = "members")
+    private List<Community> memberCommunities;
 
     public long getId() {
         return id;

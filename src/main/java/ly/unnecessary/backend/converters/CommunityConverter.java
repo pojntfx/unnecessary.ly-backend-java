@@ -15,12 +15,10 @@ public class CommunityConverter {
         return ly.unnecessary.backend.api.CommunityOuterClass.Community.newBuilder().setId(internalCommunity.getId())
                 .setDisplayName(internalCommunity.getDisplayName())
                 .setOwner(this.userConverter.toExternal(internalCommunity.getOwner()))
-                // .addAllModerators(internalCommunity.getModerators().stream().map(u ->
-                // this.userConverter.toExternal(u))
-                // .collect(Collectors.toList()))
-                // .addAllMembers(internalCommunity.getMembers().stream().map(u ->
-                // this.userConverter.toExternal(u))
-                // .collect(Collectors.toList()))
+                .addAllModerators(internalCommunity.getModerators().stream().map(u -> this.userConverter.toExternal(u))
+                        .collect(Collectors.toList()))
+                .addAllMembers(internalCommunity.getMembers().stream().map(u -> this.userConverter.toExternal(u))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
