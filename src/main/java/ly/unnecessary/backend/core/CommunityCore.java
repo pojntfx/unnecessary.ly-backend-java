@@ -99,7 +99,12 @@ public class CommunityCore {
                 userFromPersistence.getId());
 
         if (communityOwner == null) {
-            throw new Error("User isn't the owner of this community");
+            var communityMember = this.persister.getMembersOfCommunity(communityFromPersistence.getId()).stream()
+                    .filter(c -> c.getId() == userFromPersistence.getId()).findAny();
+
+            if (communityMember == null) {
+                throw new Error("User isn't the owner or member of this community");
+            }
         }
 
         chat.setChannel(channelFromPersistence);
