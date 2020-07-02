@@ -72,7 +72,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
         var externalInvitation = this.invitationConverter.toExternal(updatedInvitation);
 
-        responseObserver.onNext(externalInvitation.toBuilder().setCommunityId(internalCommunity.getId()).build());
+        responseObserver.onNext(externalInvitation);
 
         responseObserver.onCompleted();
     }

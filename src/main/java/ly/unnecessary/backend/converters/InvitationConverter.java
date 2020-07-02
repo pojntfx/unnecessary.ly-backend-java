@@ -6,10 +6,9 @@ import ly.unnecessary.backend.entities.Invitation;
 
 public class InvitationConverter {
     public ly.unnecessary.backend.api.CommunityOuterClass.Invitation toExternal(Invitation internalInvitation) {
-        // communityId is set in the service to prevent slow joins
-
         return ly.unnecessary.backend.api.CommunityOuterClass.Invitation.newBuilder().setId(internalInvitation.getId())
-                .setToken(internalInvitation.getToken()).build();
+                .setCommunityId(internalInvitation.getCommunity().getId()).setToken(internalInvitation.getToken())
+                .build();
     }
 
     public Invitation fromInvitationCreateRequestToInternal(InvitationCreateRequest invitationCreateRequest) {
