@@ -18,8 +18,7 @@ message Community {
   int64 id = 1;
   string displayName = 2;
   User owner = 3;
-  repeated User moderators = 4;
-  repeated User members = 5;
+  repeated User members = 4;
 }
 
 message InvitationCreateRequest { int64 communityId = 1; }

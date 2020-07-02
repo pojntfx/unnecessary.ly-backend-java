@@ -35,9 +35,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Community> ownedCommunities;
 
-    @ManyToMany(mappedBy = "moderators")
-    private List<Community> moderatingCommunities;
-
     @ManyToMany(mappedBy = "members")
     private List<Community> memberCommunities;
 
