@@ -1,5 +1,6 @@
 package ly.unnecessary.backend.core;
 
+import ly.unnecessary.backend.entities.Channel;
 import ly.unnecessary.backend.entities.Community;
 import ly.unnecessary.backend.entities.Invitation;
 import ly.unnecessary.backend.entities.User;
@@ -9,11 +10,14 @@ public class CommunityCore {
     private CommunityPersister persister;
     private UserCore userCore;
     private InvitationCore invitationCore;
+    private ChannelCore channelCore;
 
-    public CommunityCore(CommunityPersister persister, UserCore userCore, InvitationCore invitationCore) {
+    public CommunityCore(CommunityPersister persister, UserCore userCore, InvitationCore invitationCore,
+            ChannelCore channelCore) {
         this.persister = persister;
         this.userCore = userCore;
         this.invitationCore = invitationCore;
+        this.channelCore = channelCore;
     }
 
     public Community createCommunity(Community community, User user) {
@@ -64,4 +68,23 @@ public class CommunityCore {
 
         return communityFromPersistence;
     }
+
+    public Channel createChannel(Community community, Channel channel, User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+        var communityFromPersistence = this.persister.getCommunityById(community.getId());
+
+        var communityOwner = this.persister.getOwnerOfCommunity(communityFromPersistence.getId(),
+                userFromPersistence.getId());
+
+        if (communityOwner == null) {
+            throw new Error("User isn't the owner of this community");
+        }
+
+        channel.setCommunity(communityFromPersistence);
+
+        this.channelCore.createChannel(channel);
+
+        return channel;
+    }
+
 }

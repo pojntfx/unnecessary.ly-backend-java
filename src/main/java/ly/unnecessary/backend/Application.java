@@ -14,17 +14,20 @@ import io.ebean.migration.MigrationConfig;
 import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerInterceptors;
+import ly.unnecessary.backend.converters.ChannelConverter;
 import ly.unnecessary.backend.converters.CommunityConverter;
 import ly.unnecessary.backend.converters.InvitationConverter;
 import ly.unnecessary.backend.converters.UserConverter;
 import ly.unnecessary.backend.converters.UserPasswordResetRequestConverter;
 import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
+import ly.unnecessary.backend.core.ChannelCore;
 import ly.unnecessary.backend.core.CommunityCore;
 import ly.unnecessary.backend.core.InvitationCore;
 import ly.unnecessary.backend.core.UserCore;
 import ly.unnecessary.backend.core.UserPasswordResetRequestCore;
 import ly.unnecessary.backend.core.UserSignUpRequestCore;
 import ly.unnecessary.backend.interceptors.UserInterceptor;
+import ly.unnecessary.backend.persisters.ChannelPersister;
 import ly.unnecessary.backend.persisters.CommunityPersister;
 import ly.unnecessary.backend.persisters.InvitationPersister;
 import ly.unnecessary.backend.persisters.UserPasswordResetRequestPersister;
@@ -94,13 +97,6 @@ public class Application {
                                                                           // https://ebean.io/docs/intro/configuration/#programmatic
                 var database = DatabaseFactory.create(databaseBaseConfig);
 
-                // Create persisters
-                var userSignUpRequestPersister = new UserSignUpRequestPersister(database);
-                var userPasswordResetRequestPersister = new UserPasswordResetRequestPersister(database);
-                var userPersister = new UserPersister(database);
-                var invitationPersister = new InvitationPersister(database);
-                var communityPersister = new CommunityPersister(database);
-
                 // Create utilities
                 var mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsr, smtpPass)
                                 .withTransportStrategy(TransportStrategy.SMTP_TLS).buildMailer();
@@ -112,26 +108,36 @@ public class Application {
                 var hasher = new Hasher();
                 var userInterceptor = new UserInterceptor();
 
+                // Create persisters
+                var userSignUpRequestPersister = new UserSignUpRequestPersister(database);
+                var userPasswordResetRequestPersister = new UserPasswordResetRequestPersister(database);
+                var userPersister = new UserPersister(database);
+                var invitationPersister = new InvitationPersister(database);
+                var channelPersister = new ChannelPersister(database);
+                var communityPersister = new CommunityPersister(database);
+
                 // Create core
                 var userSignUpRequestCore = new UserSignUpRequestCore(userSignUpRequestPersister, emailer, hasher);
                 var userPasswordResetRequestCore = new UserPasswordResetRequestCore(userPasswordResetRequestPersister,
                                 emailer, hasher);
                 var userCore = new UserCore(userPersister, userSignUpRequestCore, userPasswordResetRequestCore, hasher);
                 var invitationCore = new InvitationCore(invitationPersister, hasher, tokenGenerator);
-                var communityCore = new CommunityCore(communityPersister, userCore, invitationCore);
+                var channelCore = new ChannelCore(channelPersister);
+                var communityCore = new CommunityCore(communityPersister, userCore, invitationCore, channelCore);
 
                 // Create converters
                 var userSignUpRequestConverter = new UserSignUpRequestConverter();
                 var userPasswordResetRequestConverter = new UserPasswordResetRequestConverter();
                 var userConverter = new UserConverter();
                 var invitationConverter = new InvitationConverter();
-                var communityConverter = new CommunityConverter(userConverter);
+                var channelConverter = new ChannelConverter();
+                var communityConverter = new CommunityConverter(userConverter, channelConverter);
 
                 // Create services
                 var userService = new UserService(userCore, userConverter, userSignUpRequestConverter,
                                 userPasswordResetRequestConverter);
                 var communityService = new CommunityService(communityCore, communityConverter, userConverter,
-                                invitationConverter, communityConverter);
+                                invitationConverter, communityConverter, channelConverter);
 
                 // Serve services
                 logger.info("Starting server on port {}", lport);

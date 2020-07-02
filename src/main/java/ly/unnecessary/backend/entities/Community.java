@@ -28,6 +28,9 @@ public class Community {
     @OneToMany(mappedBy = "community")
     private List<Invitation> invitations;
 
+    @OneToMany(mappedBy = "community")
+    private List<Channel> channels;
+
     public long getId() {
         return id;
     }
@@ -66,5 +69,13 @@ public class Community {
 
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
+    }
+
+    public List<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
     }
 }
