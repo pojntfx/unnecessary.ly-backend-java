@@ -4,20 +4,26 @@ import java.util.stream.Collectors;
 
 import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
 import ly.unnecessary.backend.api.CommunityOuterClass.InvitationCreateRequest;
+import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
 import ly.unnecessary.backend.entities.Community;
 
 public class CommunityConverter {
     private UserConverter userConverter;
+    private ChannelConverter channelConverter;
 
-    public CommunityConverter(UserConverter userConverter) {
+    public CommunityConverter(UserConverter userConverter, ChannelConverter channelConverter) {
         this.userConverter = userConverter;
+        this.channelConverter = channelConverter;
     }
 
     public ly.unnecessary.backend.api.CommunityOuterClass.Community toExternal(Community internalCommunity) {
         return ly.unnecessary.backend.api.CommunityOuterClass.Community.newBuilder().setId(internalCommunity.getId())
                 .setDisplayName(internalCommunity.getDisplayName())
-                .setOwner(this.userConverter.toExternal(internalCommunity.getOwner())).addAllMembers(internalCommunity
-                        .getMembers().stream().map(u -> this.userConverter.toExternal(u)).collect(Collectors.toList()))
+                .setOwner(this.userConverter.toExternal(internalCommunity.getOwner()))
+                .addAllMembers(internalCommunity.getMembers().stream().map(u -> this.userConverter.toExternal(u))
+                        .collect(Collectors.toList()))
+                .addAllChannels(internalCommunity.getChannels().stream().map(c -> this.channelConverter.toExternal(c))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -42,6 +48,14 @@ public class CommunityConverter {
         var community = new Community();
 
         community.setId(invitation.getCommunityId());
+
+        return community;
+    }
+
+    public Community fromNewChannelToInternal(NewChannel newChannel) {
+        var community = new Community();
+
+        community.setId(newChannel.getCommunityId());
 
         return community;
     }
