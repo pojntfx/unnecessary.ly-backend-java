@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Community {
@@ -27,6 +28,9 @@ public class Community {
     @ManyToMany
     @JoinTable(name = "members_users")
     private List<User> members;
+
+    @OneToMany(mappedBy = "community")
+    private List<Invitation> invitations;
 
     public long getId() {
         return id;
@@ -66,5 +70,13 @@ public class Community {
 
     public void setMembers(List<User> members) {
         this.members = members;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<Invitation> invitations) {
+        this.invitations = invitations;
     }
 }

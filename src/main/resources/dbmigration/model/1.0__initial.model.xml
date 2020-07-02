@@ -6,6 +6,24 @@
             <column name="display_name" type="varchar"/>
             <column name="owner_id" type="bigint" notnull="true" references="users.id" foreignKeyName="fk_community_owner_id" foreignKeyIndex="ix_community_owner_id"/>
         </createTable>
+        <createTable name="moderators_users" pkName="pk_moderators_users">
+            <column name="community_id" type="bigint" notnull="true" primaryKey="true"/>
+            <column name="users_id" type="bigint" notnull="true" primaryKey="true"/>
+            <foreignKey name="fk_moderators_users_community" columnNames="community_id" refColumnNames="id" refTableName="community" indexName="ix_moderators_users_community"/>
+            <foreignKey name="fk_moderators_users_users" columnNames="users_id" refColumnNames="id" refTableName="users" indexName="ix_moderators_users_users"/>
+        </createTable>
+        <createTable name="members_users" pkName="pk_members_users">
+            <column name="community_id" type="bigint" notnull="true" primaryKey="true"/>
+            <column name="users_id" type="bigint" notnull="true" primaryKey="true"/>
+            <foreignKey name="fk_members_users_community" columnNames="community_id" refColumnNames="id" refTableName="community" indexName="ix_members_users_community"/>
+            <foreignKey name="fk_members_users_users" columnNames="users_id" refColumnNames="id" refTableName="users" indexName="ix_members_users_users"/>
+        </createTable>
+        <createTable name="invitation" pkName="pk_invitation">
+            <column name="id" type="bigint" primaryKey="true"/>
+            <column name="token" type="varchar"/>
+            <column name="accepted" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="community_id" type="bigint" notnull="true" references="community.id" foreignKeyName="fk_invitation_community_id" foreignKeyIndex="ix_invitation_community_id"/>
+        </createTable>
         <createTable name="users" pkName="pk_users">
             <column name="id" type="bigint" primaryKey="true"/>
             <column name="display_name" type="varchar"/>

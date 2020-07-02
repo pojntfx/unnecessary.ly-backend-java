@@ -8,6 +8,8 @@ import "User.proto";
 
 service CommunityService {
   rpc createCommunity(NewCommunity) returns (Community);
+  rpc createInvitation(InvitationCreateRequest) returns (Invitation);
+  rpc acceptInvitation(Invitation) returns (Community);
 }
 
 message NewCommunity { string displayName = 1; }
@@ -18,4 +20,12 @@ message Community {
   User owner = 3;
   repeated User moderators = 4;
   repeated User members = 5;
+}
+
+message InvitationCreateRequest { int64 communityId = 1; }
+
+message Invitation {
+  int64 id = 1;
+  int64 communityId = 2;
+  string token = 3;
 }

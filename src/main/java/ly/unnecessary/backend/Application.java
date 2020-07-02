@@ -15,21 +15,25 @@ import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerInterceptors;
 import ly.unnecessary.backend.converters.CommunityConverter;
+import ly.unnecessary.backend.converters.InvitationConverter;
 import ly.unnecessary.backend.converters.UserConverter;
 import ly.unnecessary.backend.converters.UserPasswordResetRequestConverter;
 import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
 import ly.unnecessary.backend.core.CommunityCore;
+import ly.unnecessary.backend.core.InvitationCore;
 import ly.unnecessary.backend.core.UserCore;
 import ly.unnecessary.backend.core.UserPasswordResetRequestCore;
 import ly.unnecessary.backend.core.UserSignUpRequestCore;
 import ly.unnecessary.backend.interceptors.UserInterceptor;
 import ly.unnecessary.backend.persisters.CommunityPersister;
+import ly.unnecessary.backend.persisters.InvitationPersister;
 import ly.unnecessary.backend.persisters.UserPasswordResetRequestPersister;
 import ly.unnecessary.backend.persisters.UserPersister;
 import ly.unnecessary.backend.persisters.UserSignUpRequestPersister;
 import ly.unnecessary.backend.services.CommunityService;
 import ly.unnecessary.backend.services.UserService;
 import ly.unnecessary.backend.utilities.Hasher;
+import ly.unnecessary.backend.utilities.TokenGenerator;
 import ly.unnecessary.backend.utilities.Emailer;
 
 public class Application {
@@ -94,6 +98,7 @@ public class Application {
                 var userSignUpRequestPersister = new UserSignUpRequestPersister(database);
                 var userPasswordResetRequestPersister = new UserPasswordResetRequestPersister(database);
                 var userPersister = new UserPersister(database);
+                var invitationPersister = new InvitationPersister(database);
                 var communityPersister = new CommunityPersister(database);
 
                 // Create utilities
@@ -102,7 +107,8 @@ public class Application {
                 var templateEmail = EmailBuilder.startingBlank().from("unneccessary.ly", smtpEmail)
                                 .withSubject("unneccessary.ly Confirmation Token")
                                 .withPlainText("Your confirmation token is: ").buildEmail();
-                var emailer = new Emailer(mailer, templateEmail);
+                var tokenGenerator = new TokenGenerator();
+                var emailer = new Emailer(mailer, templateEmail, tokenGenerator);
                 var hasher = new Hasher();
                 var userInterceptor = new UserInterceptor();
 
@@ -111,18 +117,21 @@ public class Application {
                 var userPasswordResetRequestCore = new UserPasswordResetRequestCore(userPasswordResetRequestPersister,
                                 emailer, hasher);
                 var userCore = new UserCore(userPersister, userSignUpRequestCore, userPasswordResetRequestCore, hasher);
-                var communityCore = new CommunityCore(communityPersister, userCore);
+                var invitationCore = new InvitationCore(invitationPersister, hasher, tokenGenerator);
+                var communityCore = new CommunityCore(communityPersister, userCore, invitationCore);
 
                 // Create converters
                 var userSignUpRequestConverter = new UserSignUpRequestConverter();
                 var userPasswordResetRequestConverter = new UserPasswordResetRequestConverter();
                 var userConverter = new UserConverter();
+                var invitationConverter = new InvitationConverter();
                 var communityConverter = new CommunityConverter(userConverter);
 
                 // Create services
                 var userService = new UserService(userCore, userConverter, userSignUpRequestConverter,
                                 userPasswordResetRequestConverter);
-                var communityService = new CommunityService(communityCore, communityConverter, userConverter);
+                var communityService = new CommunityService(communityCore, communityConverter, userConverter,
+                                invitationConverter);
 
                 // Serve services
                 logger.info("Starting server on port {}", lport);
