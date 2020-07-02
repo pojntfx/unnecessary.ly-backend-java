@@ -2,6 +2,7 @@ package ly.unnecessary.backend.persisters;
 
 import io.ebean.Database;
 import ly.unnecessary.backend.entities.Community;
+import ly.unnecessary.backend.entities.User;
 
 public class CommunityPersister {
     private Database database;
@@ -14,5 +15,19 @@ public class CommunityPersister {
         this.database.save(community);
 
         return community;
+    }
+
+    public Community getCommunityById(long id) {
+        return this.database.find(Community.class).where().eq("id", id).findOne();
+    }
+
+    public User getOwnerOfCommunity(long id, long ownerId) {
+        var owner = this.database.find(Community.class).where().eq("id", id).findOne().getOwner();
+
+        if (owner.getId() != ownerId) {
+            return null;
+        }
+
+        return owner;
     }
 }

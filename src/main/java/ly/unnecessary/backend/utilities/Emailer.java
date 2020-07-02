@@ -1,7 +1,5 @@
 package ly.unnecessary.backend.utilities;
 
-import java.util.UUID;
-
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
@@ -9,20 +7,22 @@ import org.simplejavamail.email.EmailBuilder;
 public class Emailer {
     private Mailer mailer;
     private Email templateEmail;
+    private TokenGenerator tokenGenerator;
 
-    public Emailer(Mailer mailer, Email templateEmail) {
+    public Emailer(Mailer mailer, Email templateEmail, TokenGenerator tokenGenerator) {
         this.mailer = mailer;
         this.templateEmail = templateEmail;
+        this.tokenGenerator = tokenGenerator;
     }
 
     public String requestConfirmation(String email) {
-        var token = UUID.randomUUID();
+        var token = this.tokenGenerator.generateToken();
 
         var emailToSend = EmailBuilder.copying(this.templateEmail).to("", email)
-                .withPlainText(String.format("%s%s", this.templateEmail.getPlainText(), token.toString())).buildEmail();
+                .withPlainText(String.format("%s%s", this.templateEmail.getPlainText(), token)).buildEmail();
 
         this.mailer.sendMail(emailToSend);
 
-        return token.toString();
+        return token;
     }
 }
