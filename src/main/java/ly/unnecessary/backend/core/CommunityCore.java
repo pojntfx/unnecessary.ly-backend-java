@@ -30,7 +30,6 @@ public class CommunityCore {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());
 
-        // TODO: Check if the user is mod as well (would have the same permissions)
         var communityOwner = this.persister.getOwnerOfCommunity(communityFromPersistence.getId(),
                 userFromPersistence.getId());
 

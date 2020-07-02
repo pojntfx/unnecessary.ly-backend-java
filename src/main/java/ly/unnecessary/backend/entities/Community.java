@@ -22,10 +22,6 @@ public class Community {
     private User owner;
 
     @ManyToMany
-    @JoinTable(name = "moderators_users")
-    private List<User> moderators;
-
-    @ManyToMany
     @JoinTable(name = "members_users")
     private List<User> members;
 
@@ -54,14 +50,6 @@ public class Community {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public List<User> getModerators() {
-        return moderators;
-    }
-
-    public void setModerators(List<User> moderators) {
-        this.moderators = moderators;
     }
 
     public List<User> getMembers() {
