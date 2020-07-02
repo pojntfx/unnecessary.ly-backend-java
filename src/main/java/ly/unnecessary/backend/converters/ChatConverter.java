@@ -7,7 +7,8 @@ import ly.unnecessary.backend.entities.Chat;
 public class ChatConverter {
     public ly.unnecessary.backend.api.CommunityOuterClass.Chat toExternal(Chat internalChat) {
         return ly.unnecessary.backend.api.CommunityOuterClass.Chat.newBuilder().setId(internalChat.getId())
-                .setChannelId(internalChat.getChannel().getId()).setMessage(internalChat.getMessage()).build();
+                .setChannelId(internalChat.getChannel().getId()).setMessage(internalChat.getMessage())
+                .setUserId(internalChat.getUser().getId()).build();
     }
 
     public Chat fromNewChatToInternal(NewChat newChat) {

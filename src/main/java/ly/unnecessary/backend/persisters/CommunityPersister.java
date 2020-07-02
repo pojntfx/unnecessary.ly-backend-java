@@ -1,5 +1,7 @@
 package ly.unnecessary.backend.persisters;
 
+import java.util.List;
+
 import io.ebean.Database;
 import ly.unnecessary.backend.entities.Community;
 import ly.unnecessary.backend.entities.User;
@@ -29,5 +31,9 @@ public class CommunityPersister {
         }
 
         return owner;
+    }
+
+    public List<User> getMembersOfCommunity(long id) {
+        return this.database.find(Community.class).where().eq("id", id).findOne().getMembers();
     }
 }
