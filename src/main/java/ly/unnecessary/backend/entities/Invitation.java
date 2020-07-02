@@ -45,4 +45,8 @@ public class Invitation {
     public void setCommunity(Community community) {
         this.community = community;
     }
+
+    public Community getCommunity() {
+        return community;
+    }
 }
