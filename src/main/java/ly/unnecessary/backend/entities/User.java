@@ -38,6 +38,9 @@ public class User {
     @ManyToMany(mappedBy = "members")
     private List<Community> memberCommunities;
 
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chats;
+
     public long getId() {
         return id;
     }
@@ -84,5 +87,29 @@ public class User {
 
     public void setUserPasswordResetRequest(UserPasswordResetRequest userPasswordResetRequest) {
         this.userPasswordResetRequest = userPasswordResetRequest;
+    }
+
+    public List<Community> getOwnedCommunities() {
+        return ownedCommunities;
+    }
+
+    public void setOwnedCommunities(List<Community> ownedCommunities) {
+        this.ownedCommunities = ownedCommunities;
+    }
+
+    public List<Community> getMemberCommunities() {
+        return memberCommunities;
+    }
+
+    public void setMemberCommunities(List<Community> memberCommunities) {
+        this.memberCommunities = memberCommunities;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
     }
 }

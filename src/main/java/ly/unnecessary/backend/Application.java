@@ -15,12 +15,14 @@ import io.ebean.migration.MigrationRunner;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerInterceptors;
 import ly.unnecessary.backend.converters.ChannelConverter;
+import ly.unnecessary.backend.converters.ChatConverter;
 import ly.unnecessary.backend.converters.CommunityConverter;
 import ly.unnecessary.backend.converters.InvitationConverter;
 import ly.unnecessary.backend.converters.UserConverter;
 import ly.unnecessary.backend.converters.UserPasswordResetRequestConverter;
 import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
 import ly.unnecessary.backend.core.ChannelCore;
+import ly.unnecessary.backend.core.ChatCore;
 import ly.unnecessary.backend.core.CommunityCore;
 import ly.unnecessary.backend.core.InvitationCore;
 import ly.unnecessary.backend.core.UserCore;
@@ -28,6 +30,7 @@ import ly.unnecessary.backend.core.UserPasswordResetRequestCore;
 import ly.unnecessary.backend.core.UserSignUpRequestCore;
 import ly.unnecessary.backend.interceptors.UserInterceptor;
 import ly.unnecessary.backend.persisters.ChannelPersister;
+import ly.unnecessary.backend.persisters.ChatPersister;
 import ly.unnecessary.backend.persisters.CommunityPersister;
 import ly.unnecessary.backend.persisters.InvitationPersister;
 import ly.unnecessary.backend.persisters.UserPasswordResetRequestPersister;
@@ -114,6 +117,7 @@ public class Application {
                 var userPersister = new UserPersister(database);
                 var invitationPersister = new InvitationPersister(database);
                 var channelPersister = new ChannelPersister(database);
+                var chatPersister = new ChatPersister(database);
                 var communityPersister = new CommunityPersister(database);
 
                 // Create core
@@ -123,21 +127,24 @@ public class Application {
                 var userCore = new UserCore(userPersister, userSignUpRequestCore, userPasswordResetRequestCore, hasher);
                 var invitationCore = new InvitationCore(invitationPersister, hasher, tokenGenerator);
                 var channelCore = new ChannelCore(channelPersister);
-                var communityCore = new CommunityCore(communityPersister, userCore, invitationCore, channelCore);
+                var chatCore = new ChatCore(chatPersister);
+                var communityCore = new CommunityCore(communityPersister, userCore, invitationCore, channelCore,
+                                chatCore);
 
                 // Create converters
                 var userSignUpRequestConverter = new UserSignUpRequestConverter();
                 var userPasswordResetRequestConverter = new UserPasswordResetRequestConverter();
                 var userConverter = new UserConverter();
                 var invitationConverter = new InvitationConverter();
-                var channelConverter = new ChannelConverter();
+                var chatConverter = new ChatConverter();
+                var channelConverter = new ChannelConverter(chatConverter);
                 var communityConverter = new CommunityConverter(userConverter, channelConverter);
 
                 // Create services
                 var userService = new UserService(userCore, userConverter, userSignUpRequestConverter,
                                 userPasswordResetRequestConverter);
                 var communityService = new CommunityService(communityCore, communityConverter, userConverter,
-                                invitationConverter, communityConverter, channelConverter);
+                                invitationConverter, communityConverter, channelConverter, chatConverter);
 
                 // Serve services
                 logger.info("Starting server on port {}", lport);

@@ -11,6 +11,7 @@ service CommunityService {
   rpc createInvitation(InvitationCreateRequest) returns (Invitation);
   rpc acceptInvitation(Invitation) returns (Community);
   rpc createChannel(NewChannel) returns (Channel);
+  rpc createChat(NewChat) returns (Chat);
 }
 
 message NewCommunity { string displayName = 1; }
@@ -40,4 +41,16 @@ message Channel {
   int64 id = 1;
   int64 communityId = 2;
   string displayName = 3;
+  repeated Chat chats = 4;
+}
+
+message NewChat {
+  int64 channelId = 1;
+  string message = 2;
+}
+
+message Chat {
+  int64 id = 1;
+  int64 channelId = 2;
+  string message = 3;
 }

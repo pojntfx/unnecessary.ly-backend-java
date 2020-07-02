@@ -15,4 +15,8 @@ public class ChannelPersister {
 
         return channel;
     }
+
+    public Channel getChannelById(long id) {
+        return this.database.find(Channel.class).where().eq("id", id).findOne();
+    }
 }
