@@ -2,6 +2,7 @@ package ly.unnecessary.backend.converters;
 
 import java.util.stream.Collectors;
 
+import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
 import ly.unnecessary.backend.api.CommunityOuterClass.InvitationCreateRequest;
 import ly.unnecessary.backend.entities.Community;
 
@@ -33,6 +34,14 @@ public class CommunityConverter {
         var community = new Community();
 
         community.setId(invitationCreateRequest.getCommunityId());
+
+        return community;
+    }
+
+    public Community fromInvitationToInternal(Invitation invitation) {
+        var community = new Community();
+
+        community.setId(invitation.getCommunityId());
 
         return community;
     }

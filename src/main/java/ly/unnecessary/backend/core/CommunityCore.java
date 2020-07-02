@@ -47,4 +47,21 @@ public class CommunityCore {
 
         return invitation;
     }
+
+    public Community acceptInvitationForCommunity(Community community, Invitation invitation, User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+        var communityFromPersistence = this.persister.getCommunityById(community.getId());
+
+        this.invitationCore.acceptInvitation(invitation, communityFromPersistence);
+
+        var members = communityFromPersistence.getMembers();
+        members.add(userFromPersistence);
+        communityFromPersistence.setMembers(members);
+
+        communityFromPersistence.setMembers(members);
+
+        this.persister.saveCommunity(communityFromPersistence);
+
+        return communityFromPersistence;
+    }
 }

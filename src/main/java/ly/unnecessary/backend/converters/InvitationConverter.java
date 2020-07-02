@@ -22,4 +22,16 @@ public class InvitationConverter {
 
         return invitation;
     }
+
+    public Invitation toInternal(ly.unnecessary.backend.api.CommunityOuterClass.Invitation externalInvitation) {
+        var invitation = new Invitation();
+        var community = new Community();
+        community.setId(externalInvitation.getId());
+
+        invitation.setId(externalInvitation.getId());
+        invitation.setCommunity(community);
+        invitation.setToken(externalInvitation.getToken());
+
+        return invitation;
+    }
 }

@@ -131,7 +131,7 @@ public class Application {
                 var userService = new UserService(userCore, userConverter, userSignUpRequestConverter,
                                 userPasswordResetRequestConverter);
                 var communityService = new CommunityService(communityCore, communityConverter, userConverter,
-                                invitationConverter);
+                                invitationConverter, communityConverter);
 
                 // Serve services
                 logger.info("Starting server on port {}", lport);
