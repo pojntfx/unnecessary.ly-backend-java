@@ -18,13 +18,15 @@ public class CommunityService extends CommunityServiceImplBase {
     private CommunityConverter converter;
     private UserConverter userConverter;
     private InvitationConverter invitationConverter;
+    private CommunityConverter communityConverter;
 
     public CommunityService(CommunityCore core, CommunityConverter converter, UserConverter userConverter,
-            InvitationConverter invitationConverter) {
+            InvitationConverter invitationConverter, CommunityConverter communityConverter) {
         this.core = core;
         this.converter = converter;
         this.userConverter = userConverter;
         this.invitationConverter = invitationConverter;
+        this.communityConverter = communityConverter;
     }
 
     @Override
@@ -68,4 +70,27 @@ public class CommunityService extends CommunityServiceImplBase {
 
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void acceptInvitation(Invitation request, StreamObserver<Community> responseObserver) {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+
+        var internalCommunity = this.communityConverter.fromInvitationToInternal(request);
+        var internalInvitation = this.invitationConverter.toInternal(request);
+
+        var updatedCommunity = this.core.acceptInvitationForCommunity(internalCommunity, internalInvitation,
+                internalUser);
+
+        var externalCommunity = this.converter.toExternal(updatedCommunity);
+
+        responseObserver.onNext(externalCommunity);
+
+        responseObserver.onCompleted();
+    }
+
 }
