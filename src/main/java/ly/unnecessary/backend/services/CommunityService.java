@@ -2,6 +2,7 @@ package ly.unnecessary.backend.services;
 
 import io.grpc.stub.StreamObserver;
 import ly.unnecessary.backend.api.CommunityOuterClass.Channel;
+import ly.unnecessary.backend.api.CommunityOuterClass.ChannelFilter;
 import ly.unnecessary.backend.api.CommunityOuterClass.Chat;
 import ly.unnecessary.backend.api.CommunityOuterClass.Community;
 import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
@@ -144,5 +145,25 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onNext(externalChannel);
 
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void subscribeToChannelChats(ChannelFilter request, StreamObserver<Chat> responseObserver) {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+
+        var internalChannel = this.channelConverter.fromChannelFilter(request);
+
+        this.core.subscribeToChannelChats(internalChannel, (c) -> {
+            var externalChat = this.chatConverter.toExternal(c);
+
+            responseObserver.onNext(externalChat);
+
+            return 0;
+        }, internalUser);
     }
 }

@@ -12,6 +12,7 @@ service CommunityService {
   rpc acceptInvitation(Invitation) returns (Community);
   rpc createChannel(NewChannel) returns (Channel);
   rpc createChat(NewChat) returns (Chat);
+  rpc subscribeToChannelChats(ChannelFilter) returns (stream Chat);
 }
 
 message NewCommunity { string displayName = 1; }
@@ -55,3 +56,5 @@ message Chat {
   int64 userId = 3;
   string message = 4;
 }
+
+message ChannelFilter { int64 channelId = 1; }
