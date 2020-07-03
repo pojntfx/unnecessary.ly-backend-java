@@ -15,6 +15,7 @@ service CommunityService {
   rpc createChat(NewChat) returns (Chat);
   rpc subscribeToChannelChats(ChannelFilter) returns (stream Chat);
   rpc listCommunitiesForOwner(google.protobuf.Empty) returns (Communities);
+  rpc listCommunitiesForMember(google.protobuf.Empty) returns (Communities);
 }
 
 message NewCommunity { string displayName = 1; }
