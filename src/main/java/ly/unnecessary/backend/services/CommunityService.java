@@ -7,6 +7,7 @@ import ly.unnecessary.backend.api.CommunityOuterClass.Channel;
 import ly.unnecessary.backend.api.CommunityOuterClass.ChannelFilter;
 import ly.unnecessary.backend.api.CommunityOuterClass.Channels;
 import ly.unnecessary.backend.api.CommunityOuterClass.Chat;
+import ly.unnecessary.backend.api.CommunityOuterClass.Chats;
 import ly.unnecessary.backend.api.CommunityOuterClass.Communities;
 import ly.unnecessary.backend.api.CommunityOuterClass.Community;
 import ly.unnecessary.backend.api.CommunityOuterClass.CommunityFilter;
@@ -223,6 +224,25 @@ public class CommunityService extends CommunityServiceImplBase {
         var externalChannels = this.channelConverter.fromManyToExternal(internalChannels);
 
         responseObserver.onNext(externalChannels);
+
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void listChatsForChannel(ChannelFilter request, StreamObserver<Chats> responseObserver) {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalChannel = this.channelConverter.fromChannelFilter(request);
+
+        var internalChats = this.core.listChatsForChannel(internalChannel, internalUser);
+
+        var externalChats = this.chatConverter.fromManyToExternal(internalChats);
+
+        responseObserver.onNext(externalChats);
 
         responseObserver.onCompleted();
     }

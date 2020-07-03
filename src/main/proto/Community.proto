@@ -17,6 +17,7 @@ service CommunityService {
   rpc listCommunitiesForOwner(google.protobuf.Empty) returns (Communities);
   rpc listCommunitiesForMember(google.protobuf.Empty) returns (Communities);
   rpc listChannelsForCommunity(CommunityFilter) returns (Channels);
+  rpc listChatsForChannel(ChannelFilter) returns (Chats);
 }
 
 message NewCommunity { string displayName = 1; }
@@ -68,3 +69,5 @@ message Communities { repeated Community communities = 1; }
 message CommunityFilter { int64 communityId = 1; }
 
 message Channels { repeated Channel channels = 1; }
+
+message Chats { repeated Chat chats = 1; }

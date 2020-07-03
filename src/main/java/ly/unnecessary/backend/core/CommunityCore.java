@@ -174,4 +174,24 @@ public class CommunityCore {
 
         return communityFromPersistence.getChannels();
     }
+
+    public List<Chat> listChatsForChannel(Channel channel, User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+        var channelFromPersistence = this.channelCore.getChannelById(channel.getId());
+        var communityFromPersistence = channelFromPersistence.getCommunity();
+
+        var communityOwner = this.persister.getOwnerOfCommunity(communityFromPersistence.getId(),
+                userFromPersistence.getId());
+
+        if (communityOwner == null) {
+            var communityMember = this.persister.getMembersOfCommunity(communityFromPersistence.getId()).stream()
+                    .filter(c -> c.getId() == userFromPersistence.getId()).findAny();
+
+            if (communityMember == null) {
+                throw new Error("User isn't the owner or member of this community");
+            }
+        }
+
+        return channelFromPersistence.getChats();
+    }
 }
