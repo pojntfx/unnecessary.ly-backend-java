@@ -2,6 +2,7 @@ package ly.unnecessary.backend.converters;
 
 import java.util.stream.Collectors;
 
+import ly.unnecessary.backend.api.CommunityOuterClass.ChannelFilter;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChat;
 import ly.unnecessary.backend.entities.Channel;
@@ -38,6 +39,14 @@ public class ChannelConverter {
         var channel = new Channel();
 
         channel.setId(newChat.getChannelId());
+
+        return channel;
+    }
+
+    public Channel fromChannelFilter(ChannelFilter channelFilter) {
+        var channel = new Channel();
+
+        channel.setId(channelFilter.getChannelId());
 
         return channel;
     }

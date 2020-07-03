@@ -1,8 +1,11 @@
 package ly.unnecessary.backend.converters;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChat;
 import ly.unnecessary.backend.entities.Channel;
 import ly.unnecessary.backend.entities.Chat;
+import ly.unnecessary.backend.entities.User;
 
 public class ChatConverter {
     public ly.unnecessary.backend.api.CommunityOuterClass.Chat toExternal(Chat internalChat) {
@@ -21,5 +24,31 @@ public class ChatConverter {
         chat.setMessage(newChat.getMessage());
 
         return chat;
+    }
+
+    public Chat toInternal(ly.unnecessary.backend.api.CommunityOuterClass.Chat externalChat) {
+        var chat = new Chat();
+
+        chat.setId(externalChat.getId());
+
+        chat.setMessage(externalChat.getMessage());
+        var channel = new Channel();
+        channel.setId(externalChat.getChannelId());
+
+        var user = new User();
+        user.setId(externalChat.getChannelId());
+
+        chat.setChannel(channel);
+        chat.setUser(user);
+
+        return chat;
+    }
+
+    public Chat fromByteArrayToInternal(byte[] byteChat) throws InvalidProtocolBufferException {
+        return this.toInternal(ly.unnecessary.backend.api.CommunityOuterClass.Chat.parseFrom(byteChat));
+    }
+
+    public byte[] toByteArray(Chat internalChat) {
+        return this.toExternal(internalChat).toByteArray();
     }
 }

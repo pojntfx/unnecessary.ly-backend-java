@@ -1,5 +1,7 @@
 package ly.unnecessary.backend.core;
 
+import java.util.function.Function;
+
 import ly.unnecessary.backend.entities.Channel;
 import ly.unnecessary.backend.entities.Chat;
 import ly.unnecessary.backend.entities.Community;
@@ -113,5 +115,31 @@ public class CommunityCore {
         this.chatCore.createChat(chat);
 
         return chat;
+    }
+
+    public void subscribeToChannelChats(Channel channel, Function<Chat, Integer> handler, User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+        var channelFromPersistence = this.channelCore.getChannelById(channel.getId());
+        var communityFromPersistence = channelFromPersistence.getCommunity();
+
+        var communityOwner = this.persister.getOwnerOfCommunity(communityFromPersistence.getId(),
+                userFromPersistence.getId());
+
+        if (communityOwner == null) {
+            var communityMember = this.persister.getMembersOfCommunity(communityFromPersistence.getId()).stream()
+                    .filter(c -> c.getId() == userFromPersistence.getId()).findAny();
+
+            if (communityMember == null) {
+                throw new Error("User isn't the owner or member of this community");
+            }
+        }
+
+        this.chatCore.subscribeToChats((chat) -> {
+            if (chat.getChannel().getId() == channelFromPersistence.getId()) {
+                handler.apply(chat);
+            }
+
+            return 0;
+        });
     }
 }
