@@ -103,4 +103,10 @@ public class UserCore {
 
         return userFromPersistence.getOwnedCommunities();
     }
+
+    public List<Community> listMemberCommunities(User user) {
+        var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
+
+        return userFromPersistence.getMemberCommunities();
+    }
 }

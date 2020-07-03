@@ -187,4 +187,22 @@ public class CommunityService extends CommunityServiceImplBase {
 
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void listCommunitiesForMember(Empty request, StreamObserver<Communities> responseObserver) {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+
+        var internalCommunities = this.core.listCommunitiesForMember(internalUser);
+
+        var externalCommunities = this.communityConverter.fromManyToExternal(internalCommunities);
+
+        responseObserver.onNext(externalCommunities);
+
+        responseObserver.onCompleted();
+    }
 }

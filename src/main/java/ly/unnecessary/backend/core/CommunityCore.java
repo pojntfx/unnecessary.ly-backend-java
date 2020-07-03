@@ -149,4 +149,10 @@ public class CommunityCore {
 
         return this.userCore.listOwnedCommunities(userFromPersistence);
     }
+
+    public List<Community> listCommunitiesForMember(User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+
+        return this.userCore.listMemberCommunities(userFromPersistence);
+    }
 }
