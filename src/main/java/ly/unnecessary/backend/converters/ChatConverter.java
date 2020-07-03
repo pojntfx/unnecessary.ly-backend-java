@@ -1,7 +1,11 @@
 package ly.unnecessary.backend.converters;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import ly.unnecessary.backend.api.CommunityOuterClass.Chats;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChat;
 import ly.unnecessary.backend.entities.Channel;
 import ly.unnecessary.backend.entities.Chat;
@@ -50,5 +54,10 @@ public class ChatConverter {
 
     public byte[] toByteArray(Chat internalChat) {
         return this.toExternal(internalChat).toByteArray();
+    }
+
+    public Chats fromManyToExternal(List<Chat> internalChats) {
+        return Chats.newBuilder()
+                .addAllChats(internalChats.stream().map(c -> this.toExternal(c)).collect(Collectors.toList())).build();
     }
 }
