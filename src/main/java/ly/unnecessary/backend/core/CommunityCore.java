@@ -1,5 +1,6 @@
 package ly.unnecessary.backend.core;
 
+import java.util.List;
 import java.util.function.Function;
 
 import ly.unnecessary.backend.entities.Channel;
@@ -141,5 +142,11 @@ public class CommunityCore {
 
             return 0;
         });
+    }
+
+    public List<Community> listCommunitiesForOwner(User user) {
+        var userFromPersistence = this.userCore.signIn(user);
+
+        return this.userCore.listOwnedCommunities(userFromPersistence);
     }
 }

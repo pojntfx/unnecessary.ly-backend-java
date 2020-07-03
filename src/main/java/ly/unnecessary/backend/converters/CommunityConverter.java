@@ -1,7 +1,9 @@
 package ly.unnecessary.backend.converters;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+import ly.unnecessary.backend.api.CommunityOuterClass.Communities;
 import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
 import ly.unnecessary.backend.api.CommunityOuterClass.InvitationCreateRequest;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
@@ -58,5 +60,10 @@ public class CommunityConverter {
         community.setId(newChannel.getCommunityId());
 
         return community;
+    }
+
+    public Communities fromManyToExternal(List<Community> internalCommunities) {
+        return Communities.newBuilder().addAllCommunities(
+                internalCommunities.stream().map(c -> this.toExternal(c)).collect(Collectors.toList())).build();
     }
 }

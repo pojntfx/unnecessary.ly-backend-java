@@ -1,5 +1,8 @@
 package ly.unnecessary.backend.core;
 
+import java.util.List;
+
+import ly.unnecessary.backend.entities.Community;
 import ly.unnecessary.backend.entities.User;
 import ly.unnecessary.backend.entities.UserPasswordResetRequest;
 import ly.unnecessary.backend.entities.UserSignUpRequest;
@@ -93,5 +96,11 @@ public class UserCore {
         this.persister.saveUser(userFromPersistence);
 
         return userFromPersistence;
+    }
+
+    public List<Community> listOwnedCommunities(User user) {
+        var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
+
+        return userFromPersistence.getOwnedCommunities();
     }
 }
