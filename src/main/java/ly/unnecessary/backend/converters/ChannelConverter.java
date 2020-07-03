@@ -1,8 +1,10 @@
 package ly.unnecessary.backend.converters;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import ly.unnecessary.backend.api.CommunityOuterClass.ChannelFilter;
+import ly.unnecessary.backend.api.CommunityOuterClass.Channels;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChat;
 import ly.unnecessary.backend.entities.Channel;
@@ -49,5 +51,11 @@ public class ChannelConverter {
         channel.setId(channelFilter.getChannelId());
 
         return channel;
+    }
+
+    public Channels fromManyToExternal(List<Channel> internalChannels) {
+        return Channels.newBuilder()
+                .addAllChannels(internalChannels.stream().map(c -> this.toExternal(c)).collect(Collectors.toList()))
+                .build();
     }
 }

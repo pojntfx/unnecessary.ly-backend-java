@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ly.unnecessary.backend.api.CommunityOuterClass.Communities;
+import ly.unnecessary.backend.api.CommunityOuterClass.CommunityFilter;
 import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
 import ly.unnecessary.backend.api.CommunityOuterClass.InvitationCreateRequest;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
@@ -65,5 +66,13 @@ public class CommunityConverter {
     public Communities fromManyToExternal(List<Community> internalCommunities) {
         return Communities.newBuilder().addAllCommunities(
                 internalCommunities.stream().map(c -> this.toExternal(c)).collect(Collectors.toList())).build();
+    }
+
+    public Community fromCommunityFilter(CommunityFilter communityFilter) {
+        var community = new Community();
+
+        community.setId(communityFilter.getCommunityId());
+
+        return community;
     }
 }
