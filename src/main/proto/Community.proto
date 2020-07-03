@@ -5,6 +5,7 @@ package ly.unnecessary.backend;
 option java_package = "ly.unnecessary.backend.api";
 
 import "User.proto";
+import "google/protobuf/empty.proto";
 
 service CommunityService {
   rpc createCommunity(NewCommunity) returns (Community);
@@ -13,6 +14,7 @@ service CommunityService {
   rpc createChannel(NewChannel) returns (Channel);
   rpc createChat(NewChat) returns (Chat);
   rpc subscribeToChannelChats(ChannelFilter) returns (stream Chat);
+  rpc listCommunitiesForOwner(google.protobuf.Empty) returns (Communities);
 }
 
 message NewCommunity { string displayName = 1; }
@@ -58,3 +60,5 @@ message Chat {
 }
 
 message ChannelFilter { int64 channelId = 1; }
+
+message Communities { repeated Community communities = 1; }
