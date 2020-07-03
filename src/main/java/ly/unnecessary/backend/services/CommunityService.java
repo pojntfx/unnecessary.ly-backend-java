@@ -5,9 +5,11 @@ import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import ly.unnecessary.backend.api.CommunityOuterClass.Channel;
 import ly.unnecessary.backend.api.CommunityOuterClass.ChannelFilter;
+import ly.unnecessary.backend.api.CommunityOuterClass.Channels;
 import ly.unnecessary.backend.api.CommunityOuterClass.Chat;
 import ly.unnecessary.backend.api.CommunityOuterClass.Communities;
 import ly.unnecessary.backend.api.CommunityOuterClass.Community;
+import ly.unnecessary.backend.api.CommunityOuterClass.CommunityFilter;
 import ly.unnecessary.backend.api.CommunityOuterClass.Invitation;
 import ly.unnecessary.backend.api.CommunityOuterClass.InvitationCreateRequest;
 import ly.unnecessary.backend.api.CommunityOuterClass.NewChannel;
@@ -202,6 +204,25 @@ public class CommunityService extends CommunityServiceImplBase {
         var externalCommunities = this.communityConverter.fromManyToExternal(internalCommunities);
 
         responseObserver.onNext(externalCommunities);
+
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void listChannelsForCommunity(CommunityFilter request, StreamObserver<Channels> responseObserver) {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalCommunity = this.communityConverter.fromCommunityFilter(request);
+
+        var internalChannels = this.core.listChannelsForCommunity(internalCommunity, internalUser);
+
+        var externalChannels = this.channelConverter.fromManyToExternal(internalChannels);
+
+        responseObserver.onNext(externalChannels);
 
         responseObserver.onCompleted();
     }
