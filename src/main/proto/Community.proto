@@ -18,6 +18,7 @@ service CommunityService {
   rpc listCommunitiesForMember(google.protobuf.Empty) returns (Communities);
   rpc listChannelsForCommunity(CommunityFilter) returns (Channels);
   rpc listChatsForChannel(ChannelFilter) returns (Chats);
+  rpc getCommunity(CommunityFilter) returns (Community);
 }
 
 message NewCommunity { string displayName = 1; }
