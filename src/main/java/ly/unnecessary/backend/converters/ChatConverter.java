@@ -40,7 +40,7 @@ public class ChatConverter {
         channel.setId(externalChat.getChannelId());
 
         var user = new User();
-        user.setId(externalChat.getChannelId());
+        user.setId(externalChat.getUserId());
 
         chat.setChannel(channel);
         chat.setUser(user);
