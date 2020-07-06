@@ -22,7 +22,7 @@ public class InvitationCore {
 
         invitation.setToken(this.hasher.hash(token)); // Save the hashed token
 
-        this.persister.saveInvitation(invitation);
+        this.persister.save(invitation);
 
         invitation.setToken(token); // Return the unhashed token
 
@@ -43,7 +43,7 @@ public class InvitationCore {
 
         invitationFromPersistence.setAccepted(true);
 
-        this.persister.saveInvitation(invitationFromPersistence);
+        this.persister.save(invitationFromPersistence);
 
         return invitationFromPersistence;
     }

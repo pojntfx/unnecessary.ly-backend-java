@@ -31,7 +31,7 @@ public class CommunityCore {
 
         community.setOwner(userFromPersistence);
 
-        this.persister.saveCommunity(community);
+        this.persister.save(community);
 
         return community;
     }
@@ -53,7 +53,7 @@ public class CommunityCore {
         invitations.add(invitationFromPersistence);
         community.setInvitations(invitations);
 
-        this.persister.saveCommunity(communityFromPersistence);
+        this.persister.save(communityFromPersistence);
 
         return invitation;
     }
@@ -70,7 +70,7 @@ public class CommunityCore {
 
         communityFromPersistence.setMembers(members);
 
-        this.persister.saveCommunity(communityFromPersistence);
+        this.persister.save(communityFromPersistence);
 
         return communityFromPersistence;
     }

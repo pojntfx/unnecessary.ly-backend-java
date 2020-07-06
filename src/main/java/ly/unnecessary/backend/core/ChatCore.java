@@ -16,7 +16,7 @@ public class ChatCore {
     }
 
     public Chat createChat(Chat chat) {
-        this.persister.saveChat(chat);
+        this.persister.save(chat);
 
         this.messenger.publishChat(chat);
 

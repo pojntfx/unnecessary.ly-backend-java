@@ -3,21 +3,13 @@ package ly.unnecessary.backend.persisters;
 import io.ebean.Database;
 import ly.unnecessary.backend.entities.Invitation;
 
-public class InvitationPersister {
-    private Database database;
-
+public class InvitationPersister extends BasePersister<Invitation> {
     public InvitationPersister(Database database) {
-        this.database = database;
-    }
-
-    public Invitation saveInvitation(Invitation invitation) {
-        this.database.save(invitation);
-
-        return invitation;
+        super(database);
     }
 
     public Invitation getInvitationByIdAndCommunityId(long id, long communityId) {
-        return this.database.find(Invitation.class).where().eq("id", id).and().eq("community_id", communityId)
+        return this.getDatabase().find(Invitation.class).where().eq("id", id).and().eq("community_id", communityId)
                 .findOne();
     }
 }

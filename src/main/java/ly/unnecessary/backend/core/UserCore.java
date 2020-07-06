@@ -30,7 +30,7 @@ public class UserCore {
         user.setUserSignupRequest(userSignUpRequest);
         user.setPassword(this.hasher.hash(user.getPassword()));
 
-        this.persister.saveUser(user);
+        this.persister.save(user);
 
         return user;
     }
@@ -76,7 +76,7 @@ public class UserCore {
 
         userFromPersistence.setUserPasswordResetRequest(userPasswordResetRequest);
 
-        this.persister.saveUser(userFromPersistence);
+        this.persister.save(userFromPersistence);
 
         return userFromPersistence;
     }
@@ -93,7 +93,7 @@ public class UserCore {
 
         userFromPersistence.setPassword(this.hasher.hash(user.getPassword()));
 
-        this.persister.saveUser(userFromPersistence);
+        this.persister.save(userFromPersistence);
 
         return userFromPersistence;
     }
