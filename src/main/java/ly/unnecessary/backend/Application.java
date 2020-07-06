@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.MailerBuilder;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.ebean.DatabaseFactory;
@@ -46,28 +47,28 @@ import ly.unnecessary.backend.utilities.TokenGenerator;
 import ly.unnecessary.backend.utilities.Emailer;
 
 public class Application {
-        static String driver = "org.postgresql.Driver";
+        private static String DRIVER = "org.postgresql.Driver";
+        private static String CONFIG_PREFIX = "ULY_";
+
+        private static Logger logger = LoggerFactory.getLogger(Application.class);
 
         public static void main(String[] args) throws InterruptedException, IOException {
-                // Get logger
-                var logger = LoggerFactory.getLogger(Application.class);
-
                 // Parse flags
-                var lportFlag = System.getenv("ULY_LPORT");
-                var dbusrFlag = System.getenv("ULY_DBUSR");
-                var dbpassFlag = System.getenv("ULY_DBPASS");
-                var dbhostFlag = System.getenv("ULY_DBHOST");
-                var dbportFlag = System.getenv("ULY_DBPORT");
-                var dbnameFlag = System.getenv("ULY_DBNAME");
-                var smtpHostFlag = System.getenv("ULY_SMTPHOST");
-                var smtpPortFlag = System.getenv("ULY_SMTPPORT");
-                var smtpUsrFlag = System.getenv("ULY_SMTPUSR");
-                var smtpPassFlag = System.getenv("ULY_SMTPPASS");
-                var smtpEmailFlag = System.getenv("ULY_SMTPEMAIL");
-                var busHostFlag = System.getenv("ULY_BUSHOST");
-                var busPortFlag = System.getenv("ULY_BUSPORT");
-                var busUsrFlag = System.getenv("ULY_BUSUSR");
-                var busPassFlag = System.getenv("ULY_BUSPASS");
+                var lportFlag = System.getenv(CONFIG_PREFIX + "LPORT");
+                var dbusrFlag = System.getenv(CONFIG_PREFIX + "DBUSR");
+                var dbpassFlag = System.getenv(CONFIG_PREFIX + "DBPASS");
+                var dbhostFlag = System.getenv(CONFIG_PREFIX + "DBHOST");
+                var dbportFlag = System.getenv(CONFIG_PREFIX + "DBPORT");
+                var dbnameFlag = System.getenv(CONFIG_PREFIX + "DBNAME");
+                var smtpHostFlag = System.getenv(CONFIG_PREFIX + "SMTPHOST");
+                var smtpPortFlag = System.getenv(CONFIG_PREFIX + "SMTPPORT");
+                var smtpUsrFlag = System.getenv(CONFIG_PREFIX + "SMTPUSR");
+                var smtpPassFlag = System.getenv(CONFIG_PREFIX + "SMTPPASS");
+                var smtpEmailFlag = System.getenv(CONFIG_PREFIX + "SMTPEMAIL");
+                var busHostFlag = System.getenv(CONFIG_PREFIX + "BUSHOST");
+                var busPortFlag = System.getenv(CONFIG_PREFIX + "BUSPORT");
+                var busUsrFlag = System.getenv(CONFIG_PREFIX + "BUSUSR");
+                var busPassFlag = System.getenv(CONFIG_PREFIX + "BUSPASS");
 
                 // Use default values if flags are not set
                 var lport = (lportFlag == null) ? 1999 : Integer.valueOf(lportFlag);
@@ -94,7 +95,7 @@ public class Application {
                 migrationConfig.setDbUsername(dbusr);
                 migrationConfig.setDbPassword(dbpass);
                 migrationConfig.setDbUrl(dbConnectionLine);
-                migrationConfig.setDbDriver(driver);
+                migrationConfig.setDbDriver(DRIVER);
 
                 var migrationRunner = new MigrationRunner(migrationConfig);
                 migrationRunner.run();
@@ -105,7 +106,7 @@ public class Application {
                 dataSourceConfig.setUsername(dbusr);
                 dataSourceConfig.setPassword(dbpass);
                 dataSourceConfig.setUrl(dbConnectionLine);
-                dataSourceConfig.setDriver(driver);
+                dataSourceConfig.setDriver(DRIVER);
 
                 var databaseBaseConfig = new DatabaseConfig();
                 databaseBaseConfig.setDataSourceConfig(dataSourceConfig); // Deprecated but still in use; see
