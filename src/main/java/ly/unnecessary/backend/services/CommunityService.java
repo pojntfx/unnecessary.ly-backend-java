@@ -24,6 +24,7 @@ import ly.unnecessary.backend.converters.CommunityConverter;
 import ly.unnecessary.backend.converters.InvitationConverter;
 import ly.unnecessary.backend.converters.UserConverter;
 import ly.unnecessary.backend.core.CommunityCore;
+import ly.unnecessary.backend.entities.User;
 import ly.unnecessary.backend.interceptors.UserInterceptor;
 
 public class CommunityService extends CommunityServiceImplBase {
@@ -49,12 +50,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void createCommunity(NewCommunity request, StreamObserver<Community> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunity = this.converter.fromNewCommunityToInternal(request);
 
@@ -69,12 +65,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void createInvitation(InvitationCreateRequest request, StreamObserver<Invitation> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunity = this.converter.fromInvitationCreateRequestToInternal(request);
         var internalInvitation = this.invitationConverter.fromInvitationCreateRequestToInternal(request);
@@ -91,12 +82,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void acceptInvitation(Invitation request, StreamObserver<Community> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunity = this.communityConverter.fromInvitationToInternal(request);
         var internalInvitation = this.invitationConverter.toInternal(request);
@@ -113,12 +99,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void createChannel(NewChannel request, StreamObserver<Channel> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunity = this.communityConverter.fromNewChannelToInternal(request);
         var internalChannel = this.channelConverter.fromNewChannelToInternal(request);
@@ -134,12 +115,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void createChat(NewChat request, StreamObserver<Chat> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalChannel = this.channelConverter.fromNewChatToInternal(request);
         var internalChat = this.chatConverter.fromNewChatToInternal(request);
@@ -155,12 +131,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void subscribeToChannelChats(ChannelFilter request, StreamObserver<Chat> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalChannel = this.channelConverter.fromChannelFilter(request);
 
@@ -175,12 +146,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void listCommunitiesForOwner(Empty request, StreamObserver<Communities> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunities = this.core.listCommunitiesForOwner(internalUser);
 
@@ -193,12 +159,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void listCommunitiesForMember(Empty request, StreamObserver<Communities> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
 
         var internalCommunities = this.core.listCommunitiesForMember(internalUser);
 
@@ -211,12 +172,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void listChannelsForCommunity(CommunityFilter request, StreamObserver<Channels> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
         var internalCommunity = this.communityConverter.fromCommunityFilter(request);
 
         var internalChannels = this.core.listChannelsForCommunity(internalCommunity, internalUser);
@@ -230,12 +186,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void listChatsForChannel(ChannelFilter request, StreamObserver<Chats> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
         var internalChannel = this.channelConverter.fromChannelFilter(request);
 
         var internalChats = this.core.listChatsForChannel(internalChannel, internalUser);
@@ -249,12 +200,7 @@ public class CommunityService extends CommunityServiceImplBase {
 
     @Override
     public void getCommunity(CommunityFilter request, StreamObserver<Community> responseObserver) {
-        var email = UserInterceptor.USER_EMAIL.get();
-        var password = UserInterceptor.USER_PASSWORD.get();
-
-        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
-
-        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+        var internalUser = this.getCurrentUser();
         var internalCommunity = this.communityConverter.fromCommunityFilter(request);
 
         var updatedCommunity = this.core.getCommunity(internalCommunity, internalUser);
@@ -264,5 +210,16 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onNext(externalCommunity);
 
         responseObserver.onCompleted();
+    }
+
+    private User getCurrentUser() {
+        var email = UserInterceptor.USER_EMAIL.get();
+        var password = UserInterceptor.USER_PASSWORD.get();
+
+        var externalUser = UserSignInRequest.newBuilder().setEmail(email).setPassword(password).build();
+
+        var internalUser = this.userConverter.fromSignInRequestToInternal(externalUser);
+
+        return internalUser;
     }
 }
