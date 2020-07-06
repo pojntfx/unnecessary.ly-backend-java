@@ -21,7 +21,7 @@ public class UserPasswordResetRequestCore {
 
         userPasswordResetRequest.setToken(this.hasher.hash(token));
 
-        this.persister.saveUserPasswordResetRequest(userPasswordResetRequest);
+        this.persister.save(userPasswordResetRequest);
 
         return userPasswordResetRequest;
     }
@@ -31,7 +31,7 @@ public class UserPasswordResetRequestCore {
         if (this.hasher.verify(userPasswordResetRequest.getToken(), token)) {
             userPasswordResetRequest.setConfirmed(true);
 
-            this.persister.saveUserPasswordResetRequest(userPasswordResetRequest);
+            this.persister.save(userPasswordResetRequest);
 
             return userPasswordResetRequest;
         }

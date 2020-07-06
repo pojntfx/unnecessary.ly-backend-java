@@ -3,20 +3,12 @@ package ly.unnecessary.backend.persisters;
 import io.ebean.Database;
 import ly.unnecessary.backend.entities.User;
 
-public class UserPersister {
-    private Database database;
-
+public class UserPersister extends BasePersister<User> {
     public UserPersister(Database database) {
-        this.database = database;
-    }
-
-    public User saveUser(User user) {
-        this.database.save(user);
-
-        return user;
+        super(database);
     }
 
     public User getUserByEmail(String email) {
-        return this.database.find(User.class).where().eq("email", email).findOne();
+        return this.getDatabase().find(User.class).where().eq("email", email).findOne();
     }
 }

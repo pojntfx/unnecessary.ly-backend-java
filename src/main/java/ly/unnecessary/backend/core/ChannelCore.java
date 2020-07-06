@@ -14,7 +14,7 @@ public class ChannelCore {
     }
 
     public Channel createChannel(Channel channel) {
-        return this.persister.saveChannel(channel);
+        return this.persister.save(channel);
     }
 
     public Channel getChannelById(long id) {

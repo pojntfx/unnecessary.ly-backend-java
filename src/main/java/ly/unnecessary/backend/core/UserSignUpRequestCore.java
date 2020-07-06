@@ -21,7 +21,7 @@ public class UserSignUpRequestCore {
 
         userSignupRequest.setToken(this.hasher.hash(token));
 
-        this.persister.saveUserSignUpRequest(userSignupRequest);
+        this.persister.save(userSignupRequest);
 
         return userSignupRequest;
     }
@@ -30,7 +30,7 @@ public class UserSignUpRequestCore {
         if (this.hasher.verify(userSignupRequest.getToken(), token)) {
             userSignupRequest.setConfirmed(true);
 
-            this.persister.saveUserSignUpRequest(userSignupRequest);
+            this.persister.save(userSignupRequest);
 
             return userSignupRequest;
         }
