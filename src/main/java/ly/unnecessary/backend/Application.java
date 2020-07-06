@@ -46,6 +46,9 @@ import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.TokenGenerator;
 import ly.unnecessary.backend.utilities.Emailer;
 
+/**
+ * Main app
+ */
 public class Application {
         /**
          * Database driver FQDN

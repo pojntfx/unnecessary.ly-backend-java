@@ -5,6 +5,9 @@ import ly.unnecessary.backend.persisters.UserPasswordResetRequestPersister;
 import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.Emailer;
 
+/**
+ * Password reset business logic
+ */
 public class UserPasswordResetRequestCore {
     private UserPasswordResetRequestPersister persister;
     private Emailer emailer;
@@ -16,6 +19,9 @@ public class UserPasswordResetRequestCore {
         this.hasher = hasher;
     }
 
+    /**
+     * Request a password reset
+     */
     public UserPasswordResetRequest createRequest(UserPasswordResetRequest userPasswordResetRequest, String email) {
         var token = this.emailer.requestConfirmation(email);
 
@@ -26,6 +32,9 @@ public class UserPasswordResetRequestCore {
         return userPasswordResetRequest;
     }
 
+    /**
+     * Validate a password reset request
+     */
     public UserPasswordResetRequest validatePasswordResetRequest(UserPasswordResetRequest userPasswordResetRequest,
             String token) {
         if (this.hasher.verify(userPasswordResetRequest.getToken(), token)) {

@@ -10,6 +10,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+/**
+ * Community entity
+ */
 @Entity
 public class Community {
     @Id

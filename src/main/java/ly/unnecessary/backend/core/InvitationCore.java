@@ -6,6 +6,9 @@ import ly.unnecessary.backend.persisters.InvitationPersister;
 import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.TokenGenerator;
 
+/**
+ * Invitation business logic
+ */
 public class InvitationCore {
     private InvitationPersister persister;
     private Hasher hasher;
@@ -17,6 +20,12 @@ public class InvitationCore {
         this.tokenGenerator = tokenGenerator;
     }
 
+    /**
+     * Create invitation
+     * 
+     * @param invitation
+     * @return Invitation
+     */
     public Invitation createInvitation(Invitation invitation) {
         var token = this.tokenGenerator.generateToken();
 
@@ -29,6 +38,13 @@ public class InvitationCore {
         return invitation;
     }
 
+    /**
+     * Accept invitation
+     * 
+     * @param invitation
+     * @param community
+     * @return Invitation
+     */
     public Invitation acceptInvitation(Invitation invitation, Community community) {
         var invitationFromPersistence = this.persister.getInvitationByIdAndCommunityId(invitation.getId(),
                 community.getId());

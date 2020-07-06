@@ -10,6 +10,9 @@ import ly.unnecessary.backend.entities.Invitation;
 import ly.unnecessary.backend.entities.User;
 import ly.unnecessary.backend.persisters.CommunityPersister;
 
+/**
+ * Community business logic
+ */
 public class CommunityCore {
     private CommunityPersister persister;
     private UserCore userCore;
@@ -26,6 +29,13 @@ public class CommunityCore {
         this.chatCore = chatCore;
     }
 
+    /**
+     * Create community
+     * 
+     * @param community
+     * @param user
+     * @return Community
+     */
     public Community createCommunity(Community community, User user) {
         var userFromPersistence = this.userCore.signIn(user);
 
@@ -36,6 +46,14 @@ public class CommunityCore {
         return community;
     }
 
+    /**
+     * Create invitation to community
+     * 
+     * @param community
+     * @param invitation
+     * @param user
+     * @return Invitation
+     */
     public Invitation createInvitationForCommunity(Community community, Invitation invitation, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());
@@ -58,6 +76,14 @@ public class CommunityCore {
         return invitation;
     }
 
+    /**
+     * Accept invitation for community
+     * 
+     * @param community
+     * @param invitation
+     * @param user
+     * @return Community
+     */
     public Community acceptInvitationForCommunity(Community community, Invitation invitation, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());
@@ -75,6 +101,14 @@ public class CommunityCore {
         return communityFromPersistence;
     }
 
+    /**
+     * Create channel in community
+     * 
+     * @param community
+     * @param channel
+     * @param user
+     * @return Channel
+     */
     public Channel createChannel(Community community, Channel channel, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());
@@ -93,6 +127,14 @@ public class CommunityCore {
         return channel;
     }
 
+    /**
+     * Create chat in channel
+     * 
+     * @param channel
+     * @param chat
+     * @param user
+     * @return Chat
+     */
     public Chat createChat(Channel channel, Chat chat, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var channelFromPersistence = this.channelCore.getChannelById(channel.getId());
@@ -118,6 +160,13 @@ public class CommunityCore {
         return chat;
     }
 
+    /**
+     * Subscribe to chats in channel
+     * 
+     * @param channel
+     * @param handler
+     * @param user
+     */
     public void subscribeToChannelChats(Channel channel, Function<Chat, Integer> handler, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var channelFromPersistence = this.channelCore.getChannelById(channel.getId());
@@ -144,18 +193,37 @@ public class CommunityCore {
         });
     }
 
+    /**
+     * Get communities for owner
+     * 
+     * @param user
+     * @return List<Community>
+     */
     public List<Community> listCommunitiesForOwner(User user) {
         var userFromPersistence = this.userCore.signIn(user);
 
         return this.userCore.listOwnedCommunities(userFromPersistence);
     }
 
+    /**
+     * Get communities for member
+     * 
+     * @param user
+     * @return List<Community>
+     */
     public List<Community> listCommunitiesForMember(User user) {
         var userFromPersistence = this.userCore.signIn(user);
 
         return this.userCore.listMemberCommunities(userFromPersistence);
     }
 
+    /**
+     * Get channels for community
+     * 
+     * @param community
+     * @param user
+     * @return List<Channel>
+     */
     public List<Channel> listChannelsForCommunity(Community community, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());
@@ -175,6 +243,13 @@ public class CommunityCore {
         return communityFromPersistence.getChannels();
     }
 
+    /**
+     * Get chats for channel
+     * 
+     * @param channel
+     * @param user
+     * @return List<Chat>
+     */
     public List<Chat> listChatsForChannel(Channel channel, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var channelFromPersistence = this.channelCore.getChannelById(channel.getId());
@@ -195,6 +270,13 @@ public class CommunityCore {
         return channelFromPersistence.getChats();
     }
 
+    /**
+     * Get community
+     * 
+     * @param community
+     * @param user
+     * @return Community
+     */
     public Community getCommunity(Community community, User user) {
         var userFromPersistence = this.userCore.signIn(user);
         var communityFromPersistence = this.persister.getCommunityById(community.getId());

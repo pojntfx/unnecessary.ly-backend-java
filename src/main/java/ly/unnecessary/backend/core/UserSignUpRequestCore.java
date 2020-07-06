@@ -5,6 +5,9 @@ import ly.unnecessary.backend.persisters.UserSignUpRequestPersister;
 import ly.unnecessary.backend.utilities.Hasher;
 import ly.unnecessary.backend.utilities.Emailer;
 
+/**
+ * Sign up business logic
+ */
 public class UserSignUpRequestCore {
     private UserSignUpRequestPersister persister;
     private Emailer emailer;
@@ -16,6 +19,9 @@ public class UserSignUpRequestCore {
         this.hasher = hasher;
     }
 
+    /**
+     * Create a sign up request
+     */
     public UserSignUpRequest createRequest(UserSignUpRequest userSignupRequest, String email) {
         var token = this.emailer.requestConfirmation(email);
 
@@ -26,6 +32,13 @@ public class UserSignUpRequestCore {
         return userSignupRequest;
     }
 
+    /**
+     * Validate a sign up request
+     * 
+     * @param userSignupRequest
+     * @param token
+     * @return
+     */
     public UserSignUpRequest validateSignUpRequest(UserSignUpRequest userSignupRequest, String token) {
         if (this.hasher.verify(userSignupRequest.getToken(), token)) {
             userSignupRequest.setConfirmed(true);

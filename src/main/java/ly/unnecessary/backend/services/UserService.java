@@ -13,6 +13,9 @@ import ly.unnecessary.backend.converters.UserPasswordResetRequestConverter;
 import ly.unnecessary.backend.converters.UserSignUpRequestConverter;
 import ly.unnecessary.backend.core.UserCore;
 
+/**
+ * Users as a service (UaaS)
+ */
 public class UserService extends UserServiceImplBase {
     private UserCore core;
     private UserConverter converter;
@@ -27,6 +30,12 @@ public class UserService extends UserServiceImplBase {
         this.userPasswordResetRequestConverter = userPasswordResetRequestConverter;
     }
 
+    /**
+     * Sign in a user
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void signIn(UserSignInRequest request, StreamObserver<User> responseObserver) {
         var internalUser = this.converter.fromSignInRequestToInternal(request);
@@ -40,6 +49,12 @@ public class UserService extends UserServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Request a sign up
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void requestSignUp(UserSignUpRequest request, StreamObserver<User> responseObserver) {
         var internalUser = this.converter.fromSignUpRequestToInternal(request);
@@ -53,6 +68,12 @@ public class UserService extends UserServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Confirm a sign up
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void confirmSignUp(UserSignUpConfirmation request, StreamObserver<User> responseObserver) {
         var internalUser = this.converter.fromUserSignUpConfirmationToInternal(request);
@@ -67,6 +88,12 @@ public class UserService extends UserServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Request password reset
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void requestPasswordReset(UserPasswordResetRequest request, StreamObserver<User> responseObserver) {
         var internalUser = this.converter.fromPasswordResetRequestToInternal(request);
@@ -80,6 +107,12 @@ public class UserService extends UserServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Confirm password reset
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void confirmPasswordReset(UserPasswordResetConfirmation request, StreamObserver<User> responseObserver) {
         var internalUser = this.converter.fromUserPasswordResetConfirmationToInternal(request);

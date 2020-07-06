@@ -8,6 +8,9 @@ import io.nats.client.Connection;
 import ly.unnecessary.backend.converters.ChatConverter;
 import ly.unnecessary.backend.entities.Chat;
 
+/**
+ * Chat subscription manager
+ */
 public class ChatMessenger {
     private Connection bus;
     private ChatConverter converter;
@@ -18,10 +21,20 @@ public class ChatMessenger {
         this.converter = converter;
     }
 
+    /**
+     * Broadcast chat
+     * 
+     * @param chat
+     */
     public void publishChat(Chat chat) {
         this.bus.publish(TOPIC, this.converter.toByteArray(chat));
     }
 
+    /**
+     * Receive chats from broadcast
+     * 
+     * @param handler
+     */
     public void receiveChats(Function<Chat, Integer> handler) {
         this.bus.createDispatcher((msg) -> {
             final Chat chat;
