@@ -27,6 +27,9 @@ import ly.unnecessary.backend.core.CommunityCore;
 import ly.unnecessary.backend.entities.User;
 import ly.unnecessary.backend.interceptors.UserInterceptor;
 
+/**
+ * Communities as a service (CaaS)
+ */
 public class CommunityService extends CommunityServiceImplBase {
     private CommunityCore core;
     private CommunityConverter converter;
@@ -48,6 +51,12 @@ public class CommunityService extends CommunityServiceImplBase {
         this.chatConverter = chatConverter;
     }
 
+    /**
+     * Create community
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void createCommunity(NewCommunity request, StreamObserver<Community> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -63,6 +72,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Create invitiation
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void createInvitation(InvitationCreateRequest request, StreamObserver<Invitation> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -80,6 +95,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Accept invitiation
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void acceptInvitation(Invitation request, StreamObserver<Community> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -97,6 +118,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Create channel
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void createChannel(NewChannel request, StreamObserver<Channel> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -113,6 +140,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Create chat
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void createChat(NewChat request, StreamObserver<Chat> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -129,6 +162,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Subscribe to the chats of a channel
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void subscribeToChannelChats(ChannelFilter request, StreamObserver<Chat> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -144,6 +183,12 @@ public class CommunityService extends CommunityServiceImplBase {
         }, internalUser);
     }
 
+    /**
+     * List owner's communities
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void listCommunitiesForOwner(Empty request, StreamObserver<Communities> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -157,6 +202,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * List member's communities
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void listCommunitiesForMember(Empty request, StreamObserver<Communities> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -170,6 +221,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * List communities' channels
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void listChannelsForCommunity(CommunityFilter request, StreamObserver<Channels> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -184,6 +241,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * List chat's channels
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void listChatsForChannel(ChannelFilter request, StreamObserver<Chats> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -198,6 +261,12 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Get community
+     * 
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void getCommunity(CommunityFilter request, StreamObserver<Community> responseObserver) {
         var internalUser = this.getCurrentUser();
@@ -212,6 +281,11 @@ public class CommunityService extends CommunityServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    /**
+     * Get the current user
+     * 
+     * @return User
+     */
     private User getCurrentUser() {
         var email = UserInterceptor.USER_EMAIL.get();
         var password = UserInterceptor.USER_PASSWORD.get();

@@ -2,6 +2,9 @@ package ly.unnecessary.backend.utilities;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+/**
+ * String hasher
+ */
 public class Hasher {
     /**
      * Hash a plaintext string

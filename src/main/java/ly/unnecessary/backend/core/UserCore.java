@@ -9,6 +9,9 @@ import ly.unnecessary.backend.entities.UserSignUpRequest;
 import ly.unnecessary.backend.persisters.UserPersister;
 import ly.unnecessary.backend.utilities.Hasher;
 
+/**
+ * User business logic
+ */
 public class UserCore {
     private UserPersister persister;
     private UserSignUpRequestCore userSignUpRequestCore;
@@ -23,6 +26,12 @@ public class UserCore {
         this.hasher = hasher;
     }
 
+    /**
+     * Request to sign up
+     * 
+     * @param user
+     * @return User
+     */
     public User requestSignUp(User user) {
         var userSignUpRequest = new UserSignUpRequest();
         this.userSignUpRequestCore.createRequest(userSignUpRequest, user.getEmail());
@@ -35,6 +44,13 @@ public class UserCore {
         return user;
     }
 
+    /**
+     * Confirm sign up
+     * 
+     * @param user
+     * @param userSignUpRequest
+     * @return User
+     */
     public User confirmSignUp(User user, UserSignUpRequest userSignUpRequest) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
@@ -48,6 +64,12 @@ public class UserCore {
         return userFromPersistence;
     }
 
+    /**
+     * Sign in a user
+     * 
+     * @param user
+     * @return User
+     */
     public User signIn(User user) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
@@ -64,6 +86,12 @@ public class UserCore {
         return userFromPersistence;
     }
 
+    /**
+     * Request password reset
+     * 
+     * @param user
+     * @return User
+     */
     public User requestPasswordReset(User user) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
@@ -81,6 +109,13 @@ public class UserCore {
         return userFromPersistence;
     }
 
+    /**
+     * Confirm password reset
+     * 
+     * @param user
+     * @param userPasswordResetRequest
+     * @return User
+     */
     public User confirmPasswordReset(User user, UserPasswordResetRequest userPasswordResetRequest) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
@@ -98,12 +133,24 @@ public class UserCore {
         return userFromPersistence;
     }
 
+    /**
+     * List user's owned communities
+     * 
+     * @param user
+     * @return List<Community>
+     */
     public List<Community> listOwnedCommunities(User user) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 
         return userFromPersistence.getOwnedCommunities();
     }
 
+    /**
+     * List communities where user is member
+     * 
+     * @param user
+     * @return List<Community>
+     */
     public List<Community> listMemberCommunities(User user) {
         var userFromPersistence = this.persister.getUserByEmail(user.getEmail());
 

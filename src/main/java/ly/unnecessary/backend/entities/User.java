@@ -12,8 +12,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+/**
+ * User entity
+ */
 @Entity
-@Table(name = "users")
+@Table(name = "users") // So that it doesn't conflict with the psql default "user" table
 public class User {
     @Id
     @GeneratedValue

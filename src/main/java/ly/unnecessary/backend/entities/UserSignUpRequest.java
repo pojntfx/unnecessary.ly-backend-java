@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Sign up entity
+ */
 @Entity
 public class UserSignUpRequest {
     @Id

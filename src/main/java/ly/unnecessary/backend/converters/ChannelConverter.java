@@ -10,6 +10,9 @@ import ly.unnecessary.backend.api.CommunityOuterClass.NewChat;
 import ly.unnecessary.backend.entities.Channel;
 import ly.unnecessary.backend.entities.Community;
 
+/**
+ * Channel converter
+ */
 public class ChannelConverter {
     private ChatConverter chatConverter;
 
@@ -17,6 +20,12 @@ public class ChannelConverter {
         this.chatConverter = chatConverter;
     }
 
+    /**
+     * Convert to external
+     * 
+     * @param internalChannel
+     * @return Channel
+     */
     public ly.unnecessary.backend.api.CommunityOuterClass.Channel toExternal(Channel internalChannel) {
         return ly.unnecessary.backend.api.CommunityOuterClass.Channel.newBuilder().setId(internalChannel.getId())
                 .setCommunityId(internalChannel.getCommunity().getId()).setDisplayName(internalChannel.getDisplayName())
@@ -25,6 +34,12 @@ public class ChannelConverter {
                 .build();
     }
 
+    /**
+     * Convert from new channel to internal
+     * 
+     * @param newChannel
+     * @return Channel
+     */
     public Channel fromNewChannelToInternal(NewChannel newChannel) {
         var channel = new Channel();
 
@@ -37,6 +52,12 @@ public class ChannelConverter {
         return channel;
     }
 
+    /**
+     * Convert from new chat to internal
+     * 
+     * @param newChat
+     * @return Channel
+     */
     public Channel fromNewChatToInternal(NewChat newChat) {
         var channel = new Channel();
 
@@ -45,6 +66,12 @@ public class ChannelConverter {
         return channel;
     }
 
+    /**
+     * Convert from channel filter to internal
+     * 
+     * @param channelFilter
+     * @return Channel
+     */
     public Channel fromChannelFilter(ChannelFilter channelFilter) {
         var channel = new Channel();
 
@@ -53,6 +80,12 @@ public class ChannelConverter {
         return channel;
     }
 
+    /**
+     * Convert from many internal to external
+     * 
+     * @param internalChannels
+     * @return Channels
+     */
     public Channels fromManyToExternal(List<Channel> internalChannels) {
         return Channels.newBuilder()
                 .addAllChannels(internalChannels.stream().map(c -> this.toExternal(c)).collect(Collectors.toList()))

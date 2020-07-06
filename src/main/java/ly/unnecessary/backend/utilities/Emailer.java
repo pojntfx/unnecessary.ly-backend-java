@@ -4,6 +4,9 @@ import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
 
+/**
+ * Email sender
+ */
 public class Emailer {
     private Mailer mailer;
     private Email templateEmail;

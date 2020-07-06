@@ -10,6 +10,9 @@ import io.grpc.ServerInterceptor;
 
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
+/**
+ * User gRPC call interceptor
+ */
 public class UserInterceptor implements ServerInterceptor {
     private static String EMAIL_HEADER = "x-uly-email";
     private static String PASSWORD_HEADER = "x-uly-password";
@@ -20,6 +23,14 @@ public class UserInterceptor implements ServerInterceptor {
     public static Metadata.Key<String> USER_EMAIL_KEY = Metadata.Key.of(EMAIL_HEADER, ASCII_STRING_MARSHALLER);
     public static Metadata.Key<String> USER_PASSWORD_KEY = Metadata.Key.of(PASSWORD_HEADER, ASCII_STRING_MARSHALLER);
 
+    /**
+     * Intercept all gRPC calls and parse user from metadata
+     * 
+     * @param call
+     * @param headers
+     * @param next
+     * @return Listener<ReqT>
+     */
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers,
             ServerCallHandler<ReqT, RespT> next) {
