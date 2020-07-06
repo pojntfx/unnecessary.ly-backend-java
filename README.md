@@ -1,6 +1,6 @@
 # unnecessary.ly-Server
 
-Java backend for an unnecessary break breaker clone.
+Java backend for an unnecessary brick breaker clone.
 
 ![Maven CI](https://github.com/coffeecodecontribute/unnecessary.ly-backend-java/workflows/Maven%20CI/badge.svg)
 
