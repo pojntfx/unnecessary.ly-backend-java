@@ -15,6 +15,12 @@ public class Emailer {
         this.tokenGenerator = tokenGenerator;
     }
 
+    /**
+     * Send a confirmation email
+     * 
+     * @param email
+     * @return String
+     */
     public String requestConfirmation(String email) {
         var token = this.tokenGenerator.generateToken();
 

@@ -47,11 +47,25 @@ import ly.unnecessary.backend.utilities.TokenGenerator;
 import ly.unnecessary.backend.utilities.Emailer;
 
 public class Application {
+        /**
+         * Database driver FQDN
+         */
         private static String DRIVER = "org.postgresql.Driver";
+
+        /**
+         * Env variable config prefix
+         */
         private static String CONFIG_PREFIX = "ULY_";
 
         private static Logger logger = LoggerFactory.getLogger(Application.class);
 
+        /**
+         * Start the app
+         * 
+         * @param args
+         * @throws InterruptedException
+         * @throws IOException
+         */
         public static void main(String[] args) throws InterruptedException, IOException {
                 // Parse flags
                 var lportFlag = System.getenv(CONFIG_PREFIX + "LPORT");
