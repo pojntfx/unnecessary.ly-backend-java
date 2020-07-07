@@ -30,7 +30,7 @@ public class TestEmailer {
     private static String RECIPIENT = "felix@pojtinger.com";
 
     @BeforeEach
-    void beforeAll() {
+    void setUp() {
         Mockito.doReturn(TOKEN).when(this.tokenGenerator).generateToken();
         Mockito.doReturn(MESSAGE).when(this.templateEmail).getPlainText();
 
