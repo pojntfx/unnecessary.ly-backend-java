@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:experimental
+FROM --platform=$TARGETPLATFORM maven:3-openjdk-15
+ARG DIBS_TARGET
+ARG TARGETPLATFORM
+
+WORKDIR /app
+
+RUN curl -Lo /tmp/dibs https://nx904.your-storageshare.de/s/ZWxkmmQW37fHt9J/download
+RUN install /tmp/dibs /usr/local/bin
+
+ADD . .
+
+RUN dibs -generateSources
+RUN dibs -unitTests
