@@ -1,0 +1,18 @@
+meta:
+  image: pojntfx/unnecessary-ly-backend:latest
+  dev: false
+  debugPort: 8080
+  debugNodePort: 38080
+  target: "{{ .DIBS_TARGET }}"
+  platform: "{{ .TARGETPLATFORM }}"
+  debug: "{{ .DIBS_DEBUG }}"
+
+resources:
+  memory: "128Mi"
+  cpu: "512m"
+  maxReplicas: 10
+
+ingress:
+  nodePort: 31999
+  domain: unnecessary-ly-backend.example.com
+  path: /

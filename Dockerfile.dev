@@ -11,4 +11,4 @@ RUN install /tmp/dibs /usr/local/bin
 ADD . .
 
 RUN dibs -generateSources
-RUN dibs -dev -skipGenerateSources
+CMD dibs -dev -skipGenerateSources
