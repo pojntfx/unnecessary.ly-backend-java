@@ -2,7 +2,8 @@
 
 Java backend for an unnecessary brick breaker clone.
 
-![Maven CI](https://github.com/coffeecodecontribute/unnecessary.ly-backend-java/workflows/Maven%20CI/badge.svg)
+![Maven CI](https://github.com/pojntfx/unnecessary.ly-backend-java/workflows/Maven%20CI/badge.svg)
+![dibs CI](https://github.com/pojntfx/unnecessary.ly-backend-java/workflows/dibs%20CI/badge.svg)
 
 ## Overview
 
@@ -10,7 +11,7 @@ This project is a Java backend for [unnecessary.ly](https://pojntfx.github.io/jt
 
 ## Installation
 
-Universal, Linux, Apple and Microsoft packages are available on [GitHub Releases](https://github.com/coffeecodecontribute/unnecessary.ly-backend-java/releases).
+Universal, Linux, Apple and Microsoft packages are available on [GitHub Releases](https://github.com/pojntfx/unnecessary.ly-backend-java/releases).
 
 ## License
 

@@ -3,9 +3,9 @@ name: unnecessary-ly-backend
 version: 0.0.1
 description: Java backend for an unnecessary brick breaker clone.
 type: application
-home: https://coffeecodecontribute.github.io/unnecessary.ly-backend-java/
+home: https://pojntfx.github.io/unnecessary.ly-backend-java/
 sources:
-  - git@github.com:coffeecodecontribute/unnecessary.ly-backend-java.git
+  - git@github.com:pojntfx/unnecessary.ly-backend-java.git
 maintainers:
   - name: Felicitas Pojtinger
     email: felicitas@pojtinger.com
