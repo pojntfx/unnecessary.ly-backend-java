@@ -1,0 +1,46 @@
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: unnecessary-ly-backend
+profiles:
+  - name: unnecessary-ly-backend
+    build:
+      artifacts:
+        - image: pojntfx/unnecessary-ly-backend
+          context: .
+          docker:
+            dockerfile: Dockerfile
+      local:
+        useBuildkit: true
+    deploy:
+      helm:
+        releases:
+          - name: unnecessary-ly-backend
+            chartPath: charts/unnecessary-ly-backend
+            values:
+              meta.image: pojntfx/unnecessary-ly-backend
+  - name: unnecessary-ly-backend-dev
+    build:
+      artifacts:
+        - image: pojntfx/unnecessary-ly-backend-dev
+          context: .
+          docker:
+            dockerfile: Dockerfile.dev
+          sync:
+            infer:
+              - "**/*.java"
+      local:
+        useBuildkit: true
+    deploy:
+      helm:
+        releases:
+          - name: unnecessary-ly-backend-dev
+            chartPath: charts/unnecessary-ly-backend
+            values:
+              meta.image: pojntfx/unnecessary-ly-backend-dev
+            setValues:
+              meta.dev: true
+            setValueTemplates:
+              meta.target: "{{ .DIBS_TARGET }}"
+              meta.platform: "{{ .TARGETPLATFORM }}"
+              meta.debug: "{{ .DIBS_DEBUG }}"

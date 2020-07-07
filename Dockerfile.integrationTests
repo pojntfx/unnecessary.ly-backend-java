@@ -19,6 +19,11 @@ FROM --platform=$TARGETPLATFORM openjdk:15-ea
 ARG DIBS_TARGET
 ARG TARGETPLATFORM
 
-COPY --from=build /app/target/unnecessary.ly-backend* /usr/local/bin/unnecessary-ly-backend.jar
+WORKDIR /app
+
+RUN curl -Lo /tmp/dibs https://nx904.your-storageshare.de/s/ZWxkmmQW37fHt9J/download
+RUN install /tmp/dibs /usr/local/bin
+
+COPY --from=build /app /app
 
 CMD dibs -integrationTests

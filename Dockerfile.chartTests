@@ -41,11 +41,11 @@ RUN install /tmp/k3d /usr/local/bin
 
 COPY --from=build /app /app
 
-CMD k3d delete || true &&
-    k3d create \
-        --server-arg "--tls-san=$(/sbin/ip route | awk '/default/ { print $3 }')" \
-        --wait 10 &&
-    mkdir -p ~/.kube &&
-    cat $(k3d get-kubeconfig --name='k3s-default') | sed -e "s/127.0.0.1/$(/sbin/ip route | awk '/default/ { print $3 }')/g" >~/.kube/config &&
-    dibs -chartTests &&
-    k3d delete
+CMD k3d delete || true \
+    && k3d create \
+        --server-arg "--tls-san=$(/sbin/ip route|awk '/default/ { print $3 }')" \
+        --wait 10 \
+    && mkdir -p ~/.kube \
+    && cat $(k3d get-kubeconfig --name='k3s-default') | sed -e "s/127.0.0.1/$(/sbin/ip route|awk '/default/ { print $3 }')/g" > ~/.kube/config \
+    && dibs -chartTests \
+    && k3d delete
