@@ -212,65 +212,6 @@
 
     <profiles>
         <profile>
-            <id>platform-linux</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                    <name>linux</name>
-                </os>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <executable>jpackage</executable>
-                            <arguments>
-                                <argument>--input</argument>
-                                <argument>target</argument>
-                                <argument>--name</argument>
-                                <argument>${project.name}</argument>
-                                <argument>--description</argument>
-                                <argument>${project.description}</argument>
-                                <argument>--main-jar</argument>
-                                <argument>${project.artifactId}-${project.version}.jar</argument>
-                                <argument>--main-class</argument>
-                                <argument>${mainClass}</argument>
-                                <argument>--dest</argument>
-                                <argument>staging</argument>
-
-                                <!-- Platform specific -->
-                                <argument>--type</argument>
-                                <argument>deb</argument>
-                                <argument>--linux-deb-maintainer</argument>
-                                <argument>${appMaintainer}</argument>
-                                <argument>--linux-menu-group</argument>
-                                <argument>${appCategory}</argument>
-                                <argument>--linux-rpm-license-type</argument>
-                                <argument>${appLicense}</argument>
-                                <argument>--linux-app-release</argument>
-                                <argument>${project.version}</argument>
-                                <argument>--linux-app-category</argument>
-                                <argument>${appCategory}</argument>
-                                <argument>--linux-shortcut</argument>
-                            </arguments>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
             <id>platform-apple</id>
             <activation>
                 <os>

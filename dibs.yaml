@@ -1,0 +1,44 @@
+targets:
+  - name: linux
+    helm:
+      src: charts/unnecessary-ly-backend
+      dist: .bin/chart
+    dockerManifest: pojntfx/unnecessary-ly-backend:latest
+    platforms:
+      - identifier: linux/amd64
+        paths:
+          watch: .
+          include: (.*)\.java
+          assetInImage: /usr/local/bin/unnecessary-ly-backend.jar
+          assetOut: .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
+          gitRepoRoot: .
+        commands:
+          generateSources: mvn clean install
+          build: mvn clean install
+          unitTests: mvn test
+          integrationTests: echo 0
+          imageTests: docker run --platform linux/amd64 -e DIBS_TARGET=linux -e TARGETPLATFORM=linux/amd64 pojntfx/unnecessary-ly-backend:linux-amd64 echo 0
+          chartTests: helm install unnecessary-ly-backend .bin/chart/unnecessary-ly-backend-*.tgz && helm delete unnecessary-ly-backend
+          start: |
+            if [ "$DIBS_DEBUG" = "true" ]; then
+              java -agentlib:jdwp=transport=dt_socket,address=*:8080,server=y,suspend=n -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
+            else
+              java -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
+            fi
+        docker:
+          build:
+            file: Dockerfile
+            context: .
+            tag: pojntfx/unnecessary-ly-backend:linux-amd64
+          unitTests:
+            file: Dockerfile.unitTests
+            context: .
+            tag: pojntfx/unnecessary-ly-backend-unit-tests:linux-amd64
+          integrationTests:
+            file: Dockerfile.integrationTests
+            context: .
+            tag: pojntfx/unnecessary-ly-backend-integration-tests:linux-amd64
+          chartTests:
+            file: Dockerfile.chartTests
+            context: .
+            tag: pojntfx/unnecessary-ly-backend-chart-tests:linux-amd64
