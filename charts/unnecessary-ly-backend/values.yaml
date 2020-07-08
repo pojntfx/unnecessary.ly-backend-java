@@ -1,5 +1,5 @@
 meta:
-  image: pojntfx/unnecessary-ly-backend:latest
+  image: pojntfx/unnecessary-ly-backend:linux-amd64
   dev: false
   debugPort: 8080
   debugNodePort: 38080
@@ -18,8 +18,8 @@ meta:
   busport: 4222
 
 resources:
-  memory: "1024Mi"
-  cpu: "1024m"
+  memory: "750Mi"
+  cpu: "750m"
   maxReplicas: 10
 
 ingress:
