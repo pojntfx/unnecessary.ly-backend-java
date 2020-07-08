@@ -21,4 +21,4 @@ ARG TARGETPLATFORM
 
 COPY --from=build /app/target/unnecessary.ly-backend* /usr/local/bin/unnecessary-ly-backend.jar
 
-CMD java -jar /usr/local/bin/unnecessary-ly-backend.jar
+CMD java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/bin/unnecessary-ly-backend.jar
