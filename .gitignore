@@ -6,6 +6,7 @@ target
 dependency-reduced-pom.xml
 staging
 .bin
+charts/*/charts
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+iml
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+iml

@@ -1,17 +1,30 @@
 
-{{ if .Values.meta.dev }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ipxebuilder{{ if .Values.meta.dev }}-dev{{ end }}
+  name: unnecessary-ly-backend{{ if .Values.meta.dev }}-dev{{ end }}
 data:
   DIBS_TARGET: "{{ .Values.meta.target }}"
   TARGETPLATFORM: "{{ .Values.meta.platform }}"
   {{ if and .Values.meta.dev .Values.meta.debug }}
   DIBS_DEBUG: "true"
   {{end}}
+  ULY_LPORT: "{{ .Values.meta.lport }}"
+  ULY_DBUSR: "{{ .Values.postgresql.postgresqlUsername }}"
+  ULY_DBPASS: "{{ .Values.postgresql.postgresqlPassword }}"
+  ULY_DBHOST: "{{ .Values.meta.dbhost }}"
+  ULY_DBPORT: "{{ .Values.meta.dbport }}"
+  ULY_DBNAME: "{{ .Values.postgresql.postgresqlDatabase }}"
+  ULY_SMTPHOST: "{{ .Values.meta.smtphost }}"
+  ULY_SMTPPORT: "{{ .Values.meta.smtpport }}"
+  ULY_SMTPUSR: "{{ .Values.meta.smtpusr }}"
+  ULY_SMTPPASS: "{{ .Values.meta.smtppass }}"
+  ULY_SMTPEMAIL: "{{ .Values.meta.smtpemail }}"
+  ULY_BUSHOST: "{{ .Values.meta.bushost }}"
+  ULY_BUSPORT: "{{ .Values.meta.busport }}"
+  ULY_BUSUSR: "{{ .Values.nats.auth.user }}"
+  ULY_BUSPASS: "{{ .Values.nats.auth.password }}"
 ---
-  {{ end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -29,11 +42,9 @@ spec:
       containers:
         - name: unnecessary-ly-backend{{ if .Values.meta.dev }}-dev{{ end }}
           image: {{ .Values.meta.image }}
-          {{ if .Values.meta.dev }}
           envFrom:
             - configMapRef:
-                name: ipxebuilder{{ if .Values.meta.dev }}-dev{{ end }}
-          {{ end }}
+                name: unnecessary-ly-backend{{ if .Values.meta.dev }}-dev{{ end }}
           {{ if not .Values.meta.dev }}
           resources:
             limits:
