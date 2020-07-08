@@ -11,7 +11,17 @@ This project is a Java backend for [unnecessary.ly](https://pojntfx.github.io/jt
 
 ## Installation
 
-Universal, Linux, Apple and Microsoft packages are available on [GitHub Releases](https://github.com/pojntfx/unnecessary.ly-backend-java/releases).
+### Packages
+
+Universal, Apple and Microsoft packages are available on [GitHub Releases](https://github.com/pojntfx/unnecessary.ly-backend-java/releases).
+
+### Docker Image
+
+A Docker image is available on [Docker Hub](https://hub.docker.com/r/pojntfx/unnecessary-ly-backend).
+
+### Helm Chart
+
+A Helm chart is available in [@pojntfx's Helm chart repository](https://pojntfx.github.io/charts/).
 
 ## License
 
