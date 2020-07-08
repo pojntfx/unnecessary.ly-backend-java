@@ -21,9 +21,9 @@ targets:
           chartTests: helm install unnecessary-ly-backend .bin/chart/unnecessary-ly-backend-*.tgz && helm delete unnecessary-ly-backend
           start: |
             if [ "$DIBS_DEBUG" = "true" ]; then
-              java -agentlib:jdwp=transport=dt_socket,address=*:8080,server=y,suspend=n -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
+              java -Djava.security.egd=file:/dev/./urandom -agentlib:jdwp=transport=dt_socket,address=*:8080,server=y,suspend=n -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
             else
-              java -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
+              java -Djava.security.egd=file:/dev/./urandom -jar .bin/binaries/unnecessary-ly-backend-linux-amd64.jar
             fi
         docker:
           build:
