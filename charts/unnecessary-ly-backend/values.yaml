@@ -6,6 +6,16 @@ meta:
   target: "{{ .DIBS_TARGET }}"
   platform: "{{ .TARGETPLATFORM }}"
   debug: "{{ .DIBS_DEBUG }}"
+  lport: 1999
+  dbhost: unnecessary-ly-backend-postgresql
+  dbport: 5432
+  smtphost: mail.example.com
+  smtpport: 587
+  smtpusr: system@example.com
+  smtppass: supersecretpass
+  smtpemail: system@example.com
+  bushost: unnecessary-ly-backend-nats-client
+  busport: 4222
 
 resources:
   memory: "128Mi"
@@ -16,3 +26,13 @@ ingress:
   nodePort: 31999
   domain: unnecessary-ly-backend.example.com
   path: /
+
+postgresql:
+  postgresqlUsername: exampleuser1
+  postgresqlPassword: supersecretpass1
+  postgresqlDatabase: exampledb
+
+nats:
+  auth:
+    user: exampleuser2
+    password: supersecretpass2
