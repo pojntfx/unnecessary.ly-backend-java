@@ -18,8 +18,8 @@ meta:
   busport: 4222
 
 resources:
-  memory: "128Mi"
-  cpu: "512m"
+  memory: "1024Mi"
+  cpu: "1024m"
   maxReplicas: 10
 
 ingress:
