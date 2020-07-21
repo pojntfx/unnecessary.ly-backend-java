@@ -7,7 +7,7 @@ Java backend for an unnecessary brick breaker clone.
 
 ## Overview
 
-This project is a Java backend for [unnecessary.ly](https://pojntfx.github.io/jtodo-frontend-javafx/).
+This project is a Java backend for [unnecessary.ly](https://coffeecodecontribute.github.io/unnecessary.ly-frontend-javafx/).
 
 ## Installation
 
